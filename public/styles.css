@@ -553,71 +553,82 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
 /* ─── 6b. Our Gallery ───────────────────────────────────────────────────────── */
 .gallery-section {
   margin-bottom: 56px;
+  overflow: hidden; /* Prevent horizontal scrollbar on body */
 }
 
 .gallery-header {
   margin-bottom: 28px;
+  text-align: center;
 }
 .gallery-title {
   font-family: var(--font-heading);
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-size: clamp(2rem, 5vw, 3.2rem);
   font-weight: 300;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.02em;
   color: var(--midnight-blue);
   margin: 0;
   line-height: 1.15;
-}
-
-/* ── Grid ────────────────────────────────────────────────────────────────── */
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 12px;
 }
-
-@media (max-width: 680px) {
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 180px;
-  }
-}
-@media (max-width: 420px) {
-  .gallery-grid {
-    grid-template-columns: 1fr;
-    grid-auto-rows: 240px;
-  }
+.gallery-cursive {
+  font-family: var(--font-cursive);
+  color: #c95d66; /* Soft red/pink to match screenshot */
+  font-size: 1.2em;
+  transform: translateY(-4px);
+  text-shadow: 0 2px 8px rgba(201, 93, 102, 0.2);
 }
 
-/* Tall items span 2 rows */
-.gallery-item--tall { grid-row: span 2; }
+/* ── Slider ────────────────────────────────────────────────────────────────── */
+.gallery-slider-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden; /* Hide anything outside the track */
+  padding: 10px 0;
+}
+.gallery-slider {
+  width: 100%;
+  overflow: visible; /* Let the track bleed out */
+}
+.gallery-track {
+  display: flex;
+  width: max-content;
+  gap: 20px;
+  /* Animate seamlessly leftwards */
+  animation: scroll-seamless 25s linear infinite;
+  will-change: transform;
+}
+.gallery-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scroll-seamless {
+  0%   { transform: translateX(0); }
+  /* Translate exactly halfway (one full set of images) minus half a gap.
+     Since gap is 20px, we offset by 10px to perfectly align the loop. */
+  100% { transform: translateX(calc(-50% - 10px)); }
+}
 
 /* ── Each card ───────────────────────────────────────────────────────────── */
 .gallery-item {
+  flex: 0 0 auto;
+  width: clamp(260px, 75vw, 400px);
+  height: clamp(380px, 60vh, 550px);
   position: relative;
   overflow: hidden;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  background: var(--baby-blue);
+  border-radius: 32px; /* Soft rounded corners matching screenshot */
+  background: var(--platinum);
   margin: 0;
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--transition), transform var(--transition);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition);
 }
-.gallery-item:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-3px);
-}
-
 .gallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  will-change: transform;
-}
-.gallery-item:hover img {
-  transform: scale(1.07);
 }
 
 /* Caption overlay */
@@ -1426,7 +1437,7 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
 /* ─── Wax seal ────────────────────────────────────────────────────────────── */
 .env-seal {
   position: absolute;
-  z-index: 5;
+  z-index: 7; /* Must be higher than env-flap (z-index: 6) so it's not covered */
   /* Positioned exactly at the convergence point of the four folds */
   top: 60%;
   left: 50%;

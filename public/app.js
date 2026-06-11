@@ -143,31 +143,39 @@
   applyParallax();
 })();
 
-// ─── Gallery Lightbox ─────────────────────────────────────────────────────────
+// ─── Gallery Slider & Lightbox ──────────────────────────────────────────────────
 (function initGallery() {
-  const grid      = document.getElementById('gallery-grid');
+  const track = document.getElementById('gallery-track');
   const lightbox  = document.getElementById('lightbox');
   const lbImg     = document.getElementById('lightbox-img');
   const lbCaption = document.getElementById('lightbox-caption');
   const lbClose   = document.getElementById('lightbox-close');
   const lbPrev    = document.getElementById('lightbox-prev');
   const lbNext    = document.getElementById('lightbox-next');
-  if (!grid || !lightbox) return;
+  if (!track || !lightbox) return;
 
-  const items = [...grid.querySelectorAll('.gallery-item')];
+  // 1. Clone items for seamless CSS looping
+  const originalItems = [...track.querySelectorAll('.gallery-item')];
+  originalItems.forEach(item => {
+    const clone = item.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true'); // Hide clones from screen readers
+    track.appendChild(clone);
+  });
+
+  // 2. Lightbox Logic (works on both original and cloned items)
+  const allItems = [...track.querySelectorAll('.gallery-item')];
   let current = 0;
 
   function open(index) {
-    current = ((index % items.length) + items.length) % items.length;
-    const img = items[current].querySelector('img');
-    const cap = items[current].querySelector('figcaption');
-    // Force animation replay by cloning
+    track.style.animationPlayState = 'paused'; // Pause the marquee
+    current = ((index % allItems.length) + allItems.length) % allItems.length;
+    const img = allItems[current].querySelector('img');
     const newImg = lbImg.cloneNode(false);
     newImg.src = img.src;
     newImg.alt = img.alt;
     newImg.id  = 'lightbox-img';
     lbImg.replaceWith(newImg);
-    lbCaption.textContent = cap ? cap.textContent : '';
+    lbCaption.textContent = ''; 
     lightbox.hidden = false;
     document.body.style.overflow = 'hidden';
     lbClose.focus();
@@ -176,14 +184,17 @@
   function close() {
     lightbox.hidden = true;
     document.body.style.overflow = '';
-    items[current].querySelector('img')?.focus();
+    track.style.animationPlayState = ''; // Resume marquee
+    allItems[current].focus();
   }
 
   // Open on click
-  items.forEach((item, i) => {
+  allItems.forEach((item, i) => {
     item.addEventListener('click', () => open(i));
-    item.querySelector('img').setAttribute('tabindex', '0');
-    item.querySelector('img').addEventListener('keydown', (e) => {
+    if (!item.hasAttribute('aria-hidden')) {
+      item.setAttribute('tabindex', '0');
+    }
+    item.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i); }
     });
   });
