@@ -743,7 +743,7 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
 
 .rsvp-section {
   position: relative;
-  background: linear-gradient(145deg, var(--midnight-blue) 0%, #243555 60%, #1a3060 100%);
+  background: linear-gradient(145deg, var(--cool-cerulean) 0%, #7da2c4 60%, #688fae 100%);
 }
 
 .wave-divider--top { position: absolute; top: 0; left: 0; right: 0; line-height: 0; }
@@ -978,7 +978,7 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
   gap: 12px;
   width: 100%;
   padding: 18px 40px;
-  background: var(--midnight-blue);
+  background: var(--cool-cerulean);
   color: var(--white);
   font-size: 0.84rem;
   letter-spacing: 0.24em;
