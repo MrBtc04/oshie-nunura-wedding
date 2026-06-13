@@ -251,6 +251,8 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
   color: var(--cool-cerulean);
   -webkit-text-fill-color: var(--cool-cerulean);
   font-style: italic;
+  padding-right: 0.15em;
+  padding-left: 0.05em;
 }
 
 .hero-divider {
@@ -1314,6 +1316,8 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
 .env-card-amp {
   color: var(--cool-cerulean);
   font-style: italic;
+  padding-right: 0.15em;
+  padding-left: 0.05em;
 }
 .env-card-rule {
   display: flex;
