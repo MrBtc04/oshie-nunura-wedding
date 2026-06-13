@@ -453,6 +453,7 @@
 
   function toggleMusic() {
     if (bgMusic.paused) {
+      if (bgMusic.currentTime < 17) bgMusic.currentTime = 17;
       bgMusic.play().catch(e => console.log('Playback prevented:', e));
       iconOn.style.display = 'block';
       iconOff.style.display = 'none';
@@ -469,6 +470,7 @@
   window.playBackgroundMusic = function() {
     toggleBtn.hidden = false;
     if (bgMusic.paused) {
+      if (bgMusic.currentTime < 17) bgMusic.currentTime = 17;
       bgMusic.play().catch(e => console.log('Playback prevented:', e));
       iconOn.style.display = 'block';
       iconOff.style.display = 'none';
