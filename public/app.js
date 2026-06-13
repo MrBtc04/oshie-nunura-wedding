@@ -58,6 +58,7 @@
     // Card rises from inside envelope once flap is mostly open (~65% through)
     setTimeout(() => {
       card?.classList.add('is-rising');
+      topText?.classList.add('is-open');
       card?.removeAttribute('aria-hidden');
     }, 980);
 

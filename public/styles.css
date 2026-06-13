@@ -1213,6 +1213,7 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
   transition: opacity 0.75s ease, transform 0.75s ease;
 }
 .env-top-text.is-visible { opacity: 1; transform: none; }
+.env-top-text.is-open { transform: translateY(110px); }
 
 .env-eyebrow {
   font-size: clamp(0.65rem, 1.4vw, 0.8rem);
@@ -1288,7 +1289,7 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
 }
 .env-card.is-rising {
   opacity: 1;
-  transform: translateY(110px); /* Move it down from its top position so it rests perfectly above the dropped envelope */
+  transform: translateY(150px); /* 70% closer to the envelope drop */
   pointer-events: auto;
 }
 
