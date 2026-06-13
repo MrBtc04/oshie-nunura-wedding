@@ -575,10 +575,10 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
 }
 .gallery-cursive {
   font-family: var(--font-cursive);
-  color: #c95d66; /* Soft red/pink to match screenshot */
+  color: var(--cool-cerulean); /* Matched to theme palette */
   font-size: 1.2em;
   transform: translateY(-4px);
-  text-shadow: 0 2px 8px rgba(201, 93, 102, 0.2);
+  text-shadow: 0 2px 8px rgba(142, 177, 209, 0.25);
 }
 
 /* ── Slider ────────────────────────────────────────────────────────────────── */
