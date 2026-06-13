@@ -599,7 +599,7 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
   width: max-content;
   gap: 20px;
   /* Animate seamlessly leftwards */
-  animation: scroll-seamless 25s linear infinite;
+  animation: scroll-seamless 35s linear infinite;
   will-change: transform;
 }
 .gallery-track:hover {
