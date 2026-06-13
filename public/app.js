@@ -39,6 +39,9 @@
     if (opened || leaving) return;
     opened = true;
 
+    // Start background music as soon as they interact
+    if (typeof window.playBackgroundMusic === 'function') window.playBackgroundMusic();
+
     // Fade the CTA button out
     cta?.classList.remove('is-visible');
     cta?.classList.add('is-fading');
@@ -69,6 +72,9 @@
   function enterSite() {
     if (leaving) return;
     leaving = true;
+
+    // Start background music (in case they skipped)
+    if (typeof window.playBackgroundMusic === 'function') window.playBackgroundMusic();
 
     // Slide the overlay up (defined in CSS as overlay-leave keyframe)
     overlay?.classList.add('is-leaving');
@@ -431,4 +437,40 @@
       submitBtn.classList.remove('is-loading');
     }
   });
+})();
+
+// ─── Background Music ────────────────────────────────────────────────────────
+(function initMusic() {
+  const bgMusic = document.getElementById('bg-music');
+  const toggleBtn = document.getElementById('music-toggle');
+  if (!bgMusic || !toggleBtn) return;
+  
+  const iconOn = toggleBtn.querySelector('.icon-sound-on');
+  const iconOff = toggleBtn.querySelector('.icon-sound-off');
+
+  bgMusic.volume = 0.5; // Soften the volume slightly
+
+  function toggleMusic() {
+    if (bgMusic.paused) {
+      bgMusic.play().catch(e => console.log('Playback prevented:', e));
+      iconOn.style.display = 'block';
+      iconOff.style.display = 'none';
+    } else {
+      bgMusic.pause();
+      iconOn.style.display = 'none';
+      iconOff.style.display = 'block';
+    }
+  }
+
+  toggleBtn.addEventListener('click', toggleMusic);
+
+  // Expose function so envelope logic can trigger playback
+  window.playBackgroundMusic = function() {
+    toggleBtn.hidden = false;
+    if (bgMusic.paused) {
+      bgMusic.play().catch(e => console.log('Playback prevented:', e));
+      iconOn.style.display = 'block';
+      iconOff.style.display = 'none';
+    }
+  };
 })();

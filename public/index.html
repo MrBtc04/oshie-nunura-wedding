@@ -17,6 +17,23 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <!-- Background Music -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="music/Beauty%20and%20the%20Beast%20(From%20Beauty%20and%20the%20Beast)%20%5BInstrumental%20Philharmonic%20Orchestra%20Version%5D.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Music Toggle Button (appears after envelope is opened) -->
+  <button id="music-toggle" class="music-toggle" aria-label="Toggle music" hidden>
+    <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+    </svg>
+    <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <line x1="23" y1="9" x2="17" y2="15"></line>
+      <line x1="17" y1="9" x2="23" y2="15"></line>
+    </svg>
+  </button>
 
   <!-- ══════════════════════════════════════════ ENVELOPE INTRO OVERLAY -->
   <div id="env-overlay" class="env-overlay" role="dialog" aria-modal="true" aria-label="Wedding invitation from Oshanie and Ninura">
