@@ -200,7 +200,7 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
   width: 100%;
   height: 145%;
   object-fit: cover;
-  object-position: center 30%; /* Shift image down slightly to effectively crop top 30% */
+  object-position: center 60%; /* Push down to crop trees at top and show couple */
   will-change: transform;
   display: block;
   /* 60% opacity as requested */
