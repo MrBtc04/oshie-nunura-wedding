@@ -1211,9 +1211,11 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
   opacity: 0;
   transform: translateY(14px);
   transition: opacity 0.75s ease, transform 0.75s ease;
+  position: relative;
+  z-index: 20; /* Ensure it stays above the invitation card */
 }
 .env-top-text.is-visible { opacity: 1; transform: none; }
-.env-top-text.is-open { transform: translateY(110px); }
+.env-top-text.is-open { transform: translateY(150px); }
 
 .env-eyebrow {
   font-size: clamp(0.65rem, 1.4vw, 0.8rem);
@@ -1348,7 +1350,7 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--midnight-blue);
+  background: #8eb1d1;
   color: var(--white);
   border: 2px solid var(--midnight-blue);
   border-radius: 100px;
