@@ -1288,7 +1288,7 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
 }
 .env-card.is-rising {
   opacity: 1;
-  transform: translateY(-100px);
+  transform: translateY(110px); /* Move it down from its top position so it rests perfectly above the dropped envelope */
   pointer-events: auto;
 }
 
@@ -1388,7 +1388,7 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
 }
 .envelope.is-opening { animation: none; }
 .envelope.is-open {
-  transform: translateY(20px);
+  transform: translateY(180px);
 }
 
 /* White paper base with a royal gold inner lining */
