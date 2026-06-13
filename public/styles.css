@@ -1215,7 +1215,7 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
   z-index: 20; /* Ensure it stays above the invitation card */
 }
 .env-top-text.is-visible { opacity: 1; transform: none; }
-.env-top-text.is-open { transform: translateY(150px); }
+.env-top-text.is-open { transform: translateY(40px); }
 
 .env-eyebrow {
   font-size: clamp(0.65rem, 1.4vw, 0.8rem);
