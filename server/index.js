@@ -5,61 +5,37 @@ const cors = require('cors');
 const helmet = require('helmet');
 const session = require('express-session');
 const rateLimit = require('express-rate-limit');
-const sqlite3 = require('sqlite3').verbose();
 const nodemailer = require('nodemailer');
-const fs = require('fs');
+const { neon } = require('@neondatabase/serverless');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ─── Database Setup ────────────────────────────────────────────────────────────
-const dbDir = path.resolve(process.env.DB_PATH ? path.dirname(process.env.DB_PATH) : './db');
-if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
+// ─── Database Setup (Neon Postgres) ───────────────────────────────────────────
+const sql = neon(process.env.DATABASE_URL);
 
-const dbPath = process.env.DB_PATH || './db/rsvp.db';
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) { console.error('Failed to open database:', err.message); process.exit(1); }
-  console.log(`💾 Database: ${dbPath}`);
-});
-
-// Promisify helpers
-function dbRun(sql, params = []) {
-  return new Promise((resolve, reject) => {
-    db.run(sql, params, function (err) {
-      if (err) reject(err);
-      else resolve(this);
-    });
-  });
+// Initialize schema on startup
+async function initDb() {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS rsvps (
+        id          SERIAL PRIMARY KEY,
+        name        TEXT    NOT NULL,
+        email       TEXT    NOT NULL,
+        phone       TEXT,
+        guests      INTEGER NOT NULL DEFAULT 1,
+        attending   INTEGER NOT NULL DEFAULT 1,
+        dietary     TEXT,
+        message     TEXT,
+        created_at  TIMESTAMPTZ DEFAULT NOW()
+      )
+    `;
+    console.log('💾 Database: Neon Postgres connected & ready');
+  } catch (err) {
+    console.error('Failed to initialize database:', err.message);
+  }
 }
-function dbGet(sql, params = []) {
-  return new Promise((resolve, reject) => {
-    db.get(sql, params, (err, row) => (err ? reject(err) : resolve(row)));
-  });
-}
-function dbAll(sql, params = []) {
-  return new Promise((resolve, reject) => {
-    db.all(sql, params, (err, rows) => (err ? reject(err) : resolve(rows)));
-  });
-}
-
-// Initialize schema
-db.serialize(() => {
-  db.run('PRAGMA journal_mode = WAL');
-  db.run('PRAGMA foreign_keys = ON');
-  db.run(`
-    CREATE TABLE IF NOT EXISTS rsvps (
-      id          INTEGER PRIMARY KEY AUTOINCREMENT,
-      name        TEXT    NOT NULL,
-      email       TEXT    NOT NULL,
-      phone       TEXT,
-      guests      INTEGER NOT NULL DEFAULT 1,
-      attending   INTEGER NOT NULL DEFAULT 1,
-      dietary     TEXT,
-      message     TEXT,
-      created_at  DATETIME DEFAULT (datetime('now'))
-    )
-  `);
-});
+initDb();
 
 // ─── Middleware ────────────────────────────────────────────────────────────────
 app.use(helmet({ contentSecurityPolicy: false }));
@@ -147,21 +123,30 @@ app.post('/api/rsvp', rsvpLimiter, async (req, res) => {
   const attendingBool = attending === 'true' || attending === true || attending === 1;
 
   try {
-    const existing = await dbGet('SELECT id FROM rsvps WHERE email = ?', [email.trim().toLowerCase()]);
-    if (existing) return res.status(409).json({ error: 'An RSVP with this email already exists. Please contact us if you need to make changes.' });
+    const existing = await sql`SELECT id FROM rsvps WHERE email = ${email.trim().toLowerCase()}`;
+    if (existing.length > 0)
+      return res.status(409).json({ error: 'An RSVP with this email already exists. Please contact us if you need to make changes.' });
 
-    const result = await dbRun(
-      'INSERT INTO rsvps (name, email, phone, guests, attending, dietary, message) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [name.trim(), email.trim().toLowerCase(), phone ? phone.trim() : null, guestsNum,
-       attendingBool ? 1 : 0, dietary ? dietary.trim() : null, message ? message.trim() : null]
-    );
+    const result = await sql`
+      INSERT INTO rsvps (name, email, phone, guests, attending, dietary, message)
+      VALUES (
+        ${name.trim()},
+        ${email.trim().toLowerCase()},
+        ${phone ? phone.trim() : null},
+        ${guestsNum},
+        ${attendingBool ? 1 : 0},
+        ${dietary ? dietary.trim() : null},
+        ${message ? message.trim() : null}
+      )
+      RETURNING id
+    `;
 
     sendConfirmationEmail({ name: name.trim(), email: email.trim(), attending: attendingBool });
 
     res.status(201).json({
       success: true,
       message: "Thank you! We can't wait to celebrate with you 💙",
-      id: result.lastID,
+      id: result[0].id,
     });
   } catch (err) {
     console.error('[RSVP POST]', err.message);
@@ -197,15 +182,17 @@ app.get('/api/admin/check', (req, res) => {
 app.get('/api/admin/rsvps', requireAdmin, async (req, res) => {
   const { search } = req.query;
   try {
-    let sql = 'SELECT * FROM rsvps';
-    const params = [];
+    let rows;
     if (search?.trim()) {
-      sql += ' WHERE (LOWER(name) LIKE ? OR LOWER(email) LIKE ?)';
       const term = `%${search.trim().toLowerCase()}%`;
-      params.push(term, term);
+      rows = await sql`
+        SELECT * FROM rsvps
+        WHERE LOWER(name) LIKE ${term} OR LOWER(email) LIKE ${term}
+        ORDER BY created_at DESC
+      `;
+    } else {
+      rows = await sql`SELECT * FROM rsvps ORDER BY created_at DESC`;
     }
-    sql += ' ORDER BY created_at DESC';
-    const rows = await dbAll(sql, params);
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: 'Failed to load RSVPs.' });
@@ -215,16 +202,16 @@ app.get('/api/admin/rsvps', requireAdmin, async (req, res) => {
 app.get('/api/admin/stats', requireAdmin, async (req, res) => {
   try {
     const [total, attending, notAtt, guests] = await Promise.all([
-      dbGet('SELECT COUNT(*) as c FROM rsvps'),
-      dbGet('SELECT COUNT(*) as c FROM rsvps WHERE attending = 1'),
-      dbGet('SELECT COUNT(*) as c FROM rsvps WHERE attending = 0'),
-      dbGet('SELECT COALESCE(SUM(guests),0) as c FROM rsvps WHERE attending = 1'),
+      sql`SELECT COUNT(*) as c FROM rsvps`,
+      sql`SELECT COUNT(*) as c FROM rsvps WHERE attending = 1`,
+      sql`SELECT COUNT(*) as c FROM rsvps WHERE attending = 0`,
+      sql`SELECT COALESCE(SUM(guests),0) as c FROM rsvps WHERE attending = 1`,
     ]);
     res.json({
-      total: total.c,
-      attending: attending.c,
-      notAttending: notAtt.c,
-      totalGuests: guests.c,
+      total: parseInt(total[0].c),
+      attending: parseInt(attending[0].c),
+      notAttending: parseInt(notAtt[0].c),
+      totalGuests: parseInt(guests[0].c),
     });
   } catch (err) {
     res.status(500).json({ error: 'Failed to load stats.' });
@@ -233,8 +220,8 @@ app.get('/api/admin/stats', requireAdmin, async (req, res) => {
 
 app.delete('/api/admin/rsvps/:id', requireAdmin, async (req, res) => {
   try {
-    const result = await dbRun('DELETE FROM rsvps WHERE id = ?', [req.params.id]);
-    if (result.changes === 0) return res.status(404).json({ error: 'Not found.' });
+    const result = await sql`DELETE FROM rsvps WHERE id = ${req.params.id} RETURNING id`;
+    if (result.length === 0) return res.status(404).json({ error: 'Not found.' });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete.' });
@@ -243,7 +230,7 @@ app.delete('/api/admin/rsvps/:id', requireAdmin, async (req, res) => {
 
 app.get('/api/admin/export', requireAdmin, async (req, res) => {
   try {
-    const rows = await dbAll('SELECT * FROM rsvps ORDER BY created_at DESC');
+    const rows = await sql`SELECT * FROM rsvps ORDER BY created_at DESC`;
     const header = ['ID', 'Name', 'Email', 'Phone', 'Guests', 'Attending', 'Dietary', 'Message', 'Submitted At'];
     const lines = rows.map(r => [
       r.id,
@@ -273,7 +260,7 @@ app.get('/admin/*', (req, res) => res.sendFile(path.join(__dirname, '../admin/in
 // ─── Start ─────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`\n💙 Oshanie & Ninura Wedding RSVP`);
-  console.log(`   RSVP page: http://localhost:${PORT}`);
+  console.log(`   RSVP page:   http://localhost:${PORT}`);
   console.log(`   Admin panel: http://localhost:${PORT}/admin\n`);
 });
 
