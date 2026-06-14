@@ -4,6 +4,9 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Ensure HTML hidden attribute always wins over CSS display rules */
+[hidden] { display: none !important; }
+
 :root {
   --bg:          #0b1220;
   --surface:     #111827;
