@@ -287,6 +287,11 @@ function renderTable(rows) {
           ${r.attending ? '✓ Yes' : '✗ No'}
         </span>
       </td>
+      <td>
+        <span class="badge badge--${r.event_type === 'meal' ? 'no' : 'yes'}">
+          ${r.event_type === 'meal' ? 'Meal' : 'Wedding'}
+        </span>
+      </td>
       <td class="td-dietary">${escapeHtml(r.dietary) || '—'}</td>
       <td class="td-message" title="${escapeHtml(r.message)}">${escapeHtml(r.message) || '—'}</td>
       <td class="td-ts">${formatDate(r.created_at)}</td>

@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oshanie & Ninura — Wedding Reception RSVP | 8 August 2026</title>
+  <meta name="description" content="Join us as we celebrate the wedding of Oshanie Rammuthupura and Ninura Thondilage on Saturday, 8 August 2026 — World Happiness Happens Day — at St. Joseph's Church, Malwatta, Negombo." />
+  <meta property="og:title" content="Oshanie & Ninura — Wedding RSVP | 8 August 2026" />
+  <meta property="og:description" content="Join us as we celebrate the wedding of Oshanie Rammuthupura and Ninura Thondilage on Saturday, 8 August 2026 — World Happiness Happens Day — at St. Joseph's Church, Malwatta, Negombo." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://oshanieandninura.beauty/" />
+  <meta property="og:image" content="https://oshanieandninura.beauty/images/envelope-preview.png" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+
+  <!-- Preload hero photo for fast LCP -->
+  <link rel="preload" as="image" href="images/couple.jpeg" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Background Music -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="music/Christina%20Perri%20-%20A%20Thousand%20Years(Instrumental).mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Music Toggle Button (appears after envelope is opened) -->
+  <button id="music-toggle" class="music-toggle" aria-label="Toggle music" hidden>
+    <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+    </svg>
+    <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+      <line x1="23" y1="9" x2="17" y2="15"></line>
+      <line x1="17" y1="9" x2="23" y2="15"></line>
+    </svg>
+  </button>
+
+  <!-- ══════════════════════════════════════════ ENVELOPE INTRO OVERLAY -->
+  <div id="env-overlay" class="env-overlay" role="dialog" aria-modal="true" aria-label="Wedding invitation from Oshanie and Ninura">
+
+    <!-- Skip button -->
+    <button class="env-skip" id="env-skip" aria-label="Skip intro and go to RSVP page">Skip →</button>
+
+
+
+    <div class="env-scene">
+
+      <!-- Top text -->
+      <div class="env-top-text" id="env-top-text">
+        <p class="env-eyebrow">— You are cordially invited —</p>
+        <p class="env-tagline">to the wedding of</p>
+      </div>
+
+      <!-- Stage: envelope + card together -->
+      <div class="env-stage" id="env-stage">
+
+        <!-- Invitation card (rises from envelope) -->
+        <div class="env-card" id="env-card" aria-hidden="true">
+          <!-- Decorative top border line -->
+          <div class="env-card-topline" aria-hidden="true"></div>
+          <p class="env-card-label">Wedding Reception of</p>
+          <p class="env-card-names">Oshanie <span class="env-card-amp">&amp;</span> Ninura</p>
+          <div class="env-card-rule" aria-hidden="true"><span>◆</span></div>
+          <p class="env-card-date">Saturday, 8 August 2026</p>
+          <p class="env-card-venue">St. Joseph's Church, Malwatta, Negombo</p>
+          <button class="env-enter-btn" id="env-enter-btn" aria-label="Enter the invitation">
+            View Invitation
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- The envelope -->
+        <div class="envelope" id="envelope" role="img" aria-label="Sealed wedding envelope">
+          <!-- White base -->
+          <div class="env-base"></div>
+          <!-- Three fold triangles -->
+          <div class="env-fold env-fold--bottom"></div>
+          <div class="env-fold env-fold--left"></div>
+          <div class="env-fold env-fold--right"></div>
+          <!-- Wax seal -->
+          <div class="env-seal" id="env-seal" aria-hidden="true">
+            <span class="env-seal-text">O&amp;N</span>
+          </div>
+          <!-- Opening flap -->
+          <div class="env-flap" id="env-flap" aria-hidden="true"></div>
+        </div>
+
+      </div><!-- /env-stage -->
+
+      <!-- Open invitation CTA -->
+      <button class="env-cta" id="env-cta" aria-label="Open your wedding invitation">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8"/>
+          <path d="M3 8v10a2 2 0 002 2h14a2 2 0 002-2V8"/>
+        </svg>
+        Open your invitation
+      </button>
+
+    </div><!-- /env-scene -->
+  </div><!-- /env-overlay -->
+
+  <!-- ═══════════════════════════════════════════════════════════════ HERO -->
+  <header class="hero" id="hero" role="banner">
+
+    <!-- ── Parallax photo layer ─────────────────────────────────── -->
+    <div class="hero-photo-wrap" aria-hidden="true">
+      <img
+        id="hero-photo"
+        class="hero-photo"
+        src="images/couple.jpeg"
+        alt=""
+        draggable="false"
+      />
+    </div>
+    <!-- Blue-tone gradient overlay so text stays legible ──────────── -->
+    <!-- Decorative floral SVGs -->
+    <div class="hero-floral hero-floral--tl" aria-hidden="true">
+      <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+        <g opacity="0.55">
+          <!-- Branches -->
+          <path d="M20,200 Q60,140 110,90 Q150,50 190,20" stroke="#A7C7E7" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M50,200 Q80,160 110,110 Q135,70 160,30" stroke="#C4D8E5" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <!-- Leaves -->
+          <ellipse cx="110" cy="90" rx="18" ry="9" fill="#8EB1D1" opacity="0.6" transform="rotate(-35,110,90)"/>
+          <ellipse cx="150" cy="55" rx="14" ry="7" fill="#A7C7E7" opacity="0.6" transform="rotate(-50,150,55)"/>
+          <ellipse cx="80" cy="130" rx="12" ry="6" fill="#C4D8E5" opacity="0.7" transform="rotate(-20,80,130)"/>
+          <!-- Flowers -->
+          <circle cx="190" cy="22" r="12" fill="#A7C7E7" opacity="0.5"/>
+          <circle cx="190" cy="22" r="5" fill="#E8ECEF" opacity="0.8"/>
+          <circle cx="175" cy="10" r="8" fill="#8EB1D1" opacity="0.4"/>
+          <circle cx="175" cy="10" r="3.5" fill="#E8ECEF" opacity="0.7"/>
+          <circle cx="195" cy="40" r="7" fill="#C4D8E5" opacity="0.6"/>
+          <circle cx="195" cy="40" r="3" fill="#E8ECEF" opacity="0.7"/>
+          <!-- Buds -->
+          <ellipse cx="125" cy="72" rx="6" ry="10" fill="#A7C7E7" opacity="0.5" transform="rotate(20,125,72)"/>
+          <ellipse cx="100" cy="105" rx="5" ry="8" fill="#8EB1D1" opacity="0.4" transform="rotate(-10,100,105)"/>
+        </g>
+      </svg>
+    </div>
+    <div class="hero-floral hero-floral--br" aria-hidden="true">
+      <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+        <g opacity="0.55" transform="scale(-1,-1) translate(-220,-220)">
+          <path d="M20,200 Q60,140 110,90 Q150,50 190,20" stroke="#A7C7E7" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M50,200 Q80,160 110,110 Q135,70 160,30" stroke="#C4D8E5" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <ellipse cx="110" cy="90" rx="18" ry="9" fill="#8EB1D1" opacity="0.6" transform="rotate(-35,110,90)"/>
+          <ellipse cx="150" cy="55" rx="14" ry="7" fill="#A7C7E7" opacity="0.6" transform="rotate(-50,150,55)"/>
+          <ellipse cx="80" cy="130" rx="12" ry="6" fill="#C4D8E5" opacity="0.7" transform="rotate(-20,80,130)"/>
+          <circle cx="190" cy="22" r="12" fill="#A7C7E7" opacity="0.5"/>
+          <circle cx="190" cy="22" r="5" fill="#E8ECEF" opacity="0.8"/>
+          <circle cx="175" cy="10" r="8" fill="#8EB1D1" opacity="0.4"/>
+          <circle cx="175" cy="10" r="3.5" fill="#E8ECEF" opacity="0.7"/>
+          <circle cx="195" cy="40" r="7" fill="#C4D8E5" opacity="0.6"/>
+          <circle cx="195" cy="40" r="3" fill="#E8ECEF" opacity="0.7"/>
+          <ellipse cx="125" cy="72" rx="6" ry="10" fill="#A7C7E7" opacity="0.5" transform="rotate(20,125,72)"/>
+          <ellipse cx="100" cy="105" rx="5" ry="8" fill="#8EB1D1" opacity="0.4" transform="rotate(-10,100,105)"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow reveal-up">You are cordially invited to the wedding reception of</p>
+      <h1 class="hero-names reveal-up" style="--delay: 0.15s">Oshanie <span class="hero-ampersand">&amp;</span> Ninura</h1>
+      <div class="hero-divider reveal-up" style="--delay: 0.3s" aria-hidden="true">
+        <span></span><span class="hero-diamond">◆</span><span></span>
+      </div>
+      <p class="hero-date reveal-up" style="--delay: 0.4s">8 &nbsp;·&nbsp; 8 &nbsp;·&nbsp; 26</p>
+      <p class="hero-tagline reveal-up" style="--delay: 0.5s">World Happiness Happens Day</p>
+
+      <!-- Countdown -->
+      <div class="countdown reveal-up" style="--delay: 0.65s" id="countdown" aria-label="Countdown to the wedding">
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cd-days">—</span>
+          <span class="countdown-label">Days</span>
+        </div>
+        <div class="countdown-sep" aria-hidden="true">:</div>
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cd-hours">—</span>
+          <span class="countdown-label">Hours</span>
+        </div>
+        <div class="countdown-sep" aria-hidden="true">:</div>
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cd-mins">—</span>
+          <span class="countdown-label">Minutes</span>
+        </div>
+        <div class="countdown-sep" aria-hidden="true">:</div>
+        <div class="countdown-unit">
+          <span class="countdown-num" id="cd-secs">—</span>
+          <span class="countdown-label">Seconds</span>
+        </div>
+      </div>
+
+      <a href="#rsvp" class="hero-cta reveal-up" style="--delay: 0.8s">RSVP Now</a>
+    </div>
+
+    <!-- Scroll chevron -->
+    <a href="#details" class="scroll-hint" aria-label="Scroll to details">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </a>
+
+    <!-- Wave blending into the section below ──────────────────────────────── -->
+    <div class="hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,40 C240,90 480,0 720,45 C960,90 1200,10 1440,50 L1440,90 L0,90 Z" fill="#E8ECEF"/>
+      </svg>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════ EVENT DETAILS -->
+  <section class="section details-section" id="details">
+    <div class="container">
+      <div class="section-label reveal-up">The Reception</div>
+      <h2 class="section-title reveal-up" style="--delay:0.1s">Event Details</h2>
+
+      <div class="details-grid">
+        <!-- Venue Card -->
+        <div class="detail-card reveal-up" style="--delay:0.15s">
+          <div class="detail-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <h3 class="detail-card__title">Venue</h3>
+          <p class="detail-card__body">St. Joseph's Church<br>Malwatta, Negombo<br>Sri Lanka</p>
+        </div>
+
+        <!-- Date Card -->
+        <div class="detail-card reveal-up" style="--delay:0.25s">
+          <div class="detail-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <h3 class="detail-card__title">Date</h3>
+          <p class="detail-card__body">Saturday<br>8 August 2026</p>
+        </div>
+
+        <!-- Time Card -->
+        <div class="detail-card reveal-up" style="--delay:0.35s">
+          <div class="detail-card__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <h3 class="detail-card__title">Time</h3>
+          <p class="detail-card__body">Three o'clock<br>in the evening<br><em>(3:00 PM)</em></p>
+        </div>
+      </div>
+
+      <!-- Our Gallery ─────────────────────────────────────────────────────── -->
+      <div class="gallery-section reveal-up" id="gallery" style="--delay:0.15s">
+        <div class="gallery-header">
+          <p class="section-label" style="text-align:center;">A Lifetime Of</p>
+          <h3 class="gallery-title">Our <span class="gallery-cursive">Gallery</span></h3>
+        </div>
+
+        <div class="gallery-slider-wrap">
+          <div class="gallery-slider" id="gallery-slider" role="list">
+            <div class="gallery-track" id="gallery-track">
+              <figure class="gallery-item" role="listitem">
+                <img src="images/gallery/1.jpeg" alt="Gallery Photo 1" loading="lazy" />
+              </figure>
+              <figure class="gallery-item" role="listitem">
+                <img src="images/gallery/2.jpeg" alt="Gallery Photo 2" loading="lazy" />
+              </figure>
+              <figure class="gallery-item" role="listitem">
+                <img src="images/gallery/3.jpeg" alt="Gallery Photo 3" loading="lazy" />
+              </figure>
+              <figure class="gallery-item" role="listitem">
+                <img src="images/gallery/4.jpeg" alt="Gallery Photo 4" loading="lazy" />
+              </figure>
+              <figure class="gallery-item" role="listitem">
+                <img src="images/gallery/5.jpeg" alt="Gallery Photo 5" loading="lazy" />
+              </figure>
+              <figure class="gallery-item" role="listitem">
+                <img src="images/gallery/6.jpeg" alt="Gallery Photo 6" loading="lazy" />
+              </figure>
+              <figure class="gallery-item" role="listitem">
+                <img src="images/gallery/7.jpeg" alt="Gallery Photo 7" loading="lazy" />
+              </figure>
+              <figure class="gallery-item" role="listitem">
+                <img src="images/gallery/8.jpeg" alt="Gallery Photo 8" loading="lazy" />
+              </figure>
+              <figure class="gallery-item" role="listitem">
+                <img src="images/gallery/9.jpeg" alt="Gallery Photo 9" loading="lazy" />
+              </figure>
+              <figure class="gallery-item" role="listitem">
+                <img src="images/gallery/10.jpeg" alt="Gallery Photo 10" loading="lazy" />
+              </figure>
+              <figure class="gallery-item" role="listitem">
+                <img src="images/gallery/11.jpeg" alt="Gallery Photo 11" loading="lazy" />
+              </figure>
+              <figure class="gallery-item" role="listitem">
+                <img src="images/gallery/12.jpeg" alt="Gallery Photo 12" loading="lazy" />
+              </figure>
+            </div>
+          </div>
+        </div>
+
+      <!-- Lightbox ──────────────────────────────────────────────────────────── -->
+      <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo lightbox" hidden>
+        <button class="lightbox-close" id="lightbox-close" aria-label="Close lightbox">✕</button>
+        <button class="lightbox-prev" id="lightbox-prev" aria-label="Previous photo">‹</button>
+        <button class="lightbox-next" id="lightbox-next" aria-label="Next photo">›</button>
+        <div class="lightbox-img-wrap">
+          <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+        </div>
+        <p class="lightbox-caption" id="lightbox-caption"></p>
+      </div>
+
+      <!-- Map ─────────────────────────────────────────────────────────────── -->
+      
+      <div class="map-header" style="text-align: center; margin-top: 64px; margin-bottom: 24px;">
+        <h2 class="section-title reveal-up" style="margin-bottom: 4px;">Directions to the Ceremony</h2>
+        <p class="reveal-up" style="--delay:0.1s; font-size: 0.9rem; color: var(--midnight-blue); margin-top: 8px; opacity: 0.8;">Tap the map to open navigation</p>
+      </div>
+
+      <div class="map-wrapper reveal-up" style="--delay:0.2s; position: relative;">
+        <!-- Clickable overlay that intercepts clicks and opens directions -->
+        <a href="https://www.google.com/maps/dir/?api=1&destination=St.+Joseph's+Church,+Malwatta,+Negombo" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           aria-label="Get directions to St. Joseph's Church"
+           style="position: absolute; inset: 0; z-index: 10;">
+        </a>
+        <iframe
+          title="St. Joseph's Church, Malwatta, Negombo on Google Maps"
+          src="https://maps.google.com/maps?q=St.+Joseph's+Church,+Malwatta,+Negombo&t=&z=15&ie=UTF8&iwloc=&output=embed"
+          width="100%"
+          height="380"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════ RSVP FORM -->
+  <section class="section rsvp-section" id="rsvp">
+    <!-- Watercolor divider -->
+    <div class="wave-divider wave-divider--top" aria-hidden="true">
+      <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,40 C360,80 1080,0 1440,40 L1440,0 L0,0 Z" fill="#E8ECEF"/>
+      </svg>
+    </div>
+
+    <div class="container">
+      <div class="section-label section-label--light reveal-up">Your Response</div>
+      <h2 class="section-title section-title--light reveal-up" style="--delay:0.1s">RSVP</h2>
+      <p class="section-subtitle reveal-up" style="--delay:0.2s">Please fill in the form below to let us know if you'll be joining us on our special day.</p>
+
+      <!-- Success message (hidden by default) -->
+      <div class="rsvp-success" id="rsvp-success" role="alert" aria-live="polite" hidden>
+        <div class="rsvp-success__inner">
+          <div class="rsvp-success__heart" aria-hidden="true">💙</div>
+          <h3 class="rsvp-success__title">Thank you!</h3>
+          <p class="rsvp-success__msg">We can't wait to celebrate with you 💙</p>
+        </div>
+      </div>
+
+      <!-- RSVP Form -->
+      <form class="rsvp-form reveal-up" id="rsvp-form" style="--delay:0.25s" novalidate>
+        <input type="hidden" name="eventType" value="meal" />
+        <div class="form-row form-row--2">
+          <div class="form-group">
+            <label class="form-label" for="name">Full Name <span class="form-required" aria-label="required">*</span></label>
+            <input class="form-input" type="text" id="name" name="name" placeholder="Your full name" required autocomplete="name" />
+            <span class="form-error" id="name-error" role="alert"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="phone">Phone Number <span class="form-optional">(optional)</span></label>
+            <input class="form-input" type="tel" id="phone" name="phone" placeholder="+94 77 000 0000" autocomplete="tel" />
+          </div>
+        </div>
+
+        <div class="form-row form-row--2">
+          <div class="form-group">
+            <label class="form-label" for="guests">Number of Guests</label>
+            <div class="guests-selector" role="group" aria-label="Select number of guests">
+              <button type="button" class="guests-btn guests-btn--dec" id="guests-dec" aria-label="Decrease guests">−</button>
+              <input class="guests-display" type="number" id="guests" name="guests" value="1" min="1" max="5" readonly aria-live="polite" />
+              <button type="button" class="guests-btn guests-btn--inc" id="guests-inc" aria-label="Increase guests">+</button>
+            </div>
+            <span class="form-hint">Including yourself (max 5)</span>
+          </div>
+        </div>
+
+        <!-- Attendance Toggle -->
+        <div class="form-group">
+          <label class="form-label">Will you be attending? <span class="form-required" aria-label="required">*</span></label>
+          <div class="attend-toggle" role="group" aria-label="Attendance confirmation">
+            <input type="radio" name="attending" id="attend-yes" value="true" checked class="sr-only" />
+            <label for="attend-yes" class="attend-btn attend-btn--yes">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Joyfully Accept
+            </label>
+            <input type="radio" name="attending" id="attend-no" value="false" class="sr-only" />
+            <label for="attend-no" class="attend-btn attend-btn--no">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Regretfully Decline
+            </label>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label class="form-label" for="message">Message to the Couple <span class="form-optional">(optional)</span></label>
+          <textarea class="form-textarea" id="message" name="message" placeholder="Share your warm wishes for Oshanie & Ninura..." rows="4"></textarea>
+        </div>
+
+        <div class="form-error form-error--global" id="form-error-global" role="alert" aria-live="polite"></div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+          <span class="submit-btn__text">Send My RSVP</span>
+          <span class="submit-btn__spinner" aria-hidden="true"></span>
+        </button>
+      </form>
+    </div>
+
+    <div class="wave-divider wave-divider--bottom" aria-hidden="true">
+      <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,40 C360,0 1080,80 1440,40 L1440,80 L0,80 Z" fill="#E8ECEF"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <!-- Footer florals -->
+    <div class="footer-floral footer-floral--l" aria-hidden="true">
+      <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+        <g opacity="0.3">
+          <path d="M10,110 Q50,60 100,20" stroke="#A7C7E7" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <ellipse cx="60" cy="65" rx="14" ry="6" fill="#8EB1D1" transform="rotate(-40,60,65)"/>
+          <ellipse cx="85" cy="38" rx="10" ry="5" fill="#A7C7E7" transform="rotate(-55,85,38)"/>
+          <circle cx="100" cy="22" r="10" fill="#A7C7E7" opacity="0.7"/>
+          <circle cx="100" cy="22" r="4" fill="#E8ECEF" opacity="0.6"/>
+          <circle cx="115" cy="12" r="7" fill="#8EB1D1" opacity="0.5"/>
+          <circle cx="115" cy="12" r="3" fill="#E8ECEF" opacity="0.6"/>
+        </g>
+      </svg>
+    </div>
+    <div class="footer-floral footer-floral--r" aria-hidden="true">
+      <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+        <g opacity="0.3" transform="scale(-1,1) translate(-160,0)">
+          <path d="M10,110 Q50,60 100,20" stroke="#A7C7E7" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <ellipse cx="60" cy="65" rx="14" ry="6" fill="#8EB1D1" transform="rotate(-40,60,65)"/>
+          <ellipse cx="85" cy="38" rx="10" ry="5" fill="#A7C7E7" transform="rotate(-55,85,38)"/>
+          <circle cx="100" cy="22" r="10" fill="#A7C7E7" opacity="0.7"/>
+          <circle cx="100" cy="22" r="4" fill="#E8ECEF" opacity="0.6"/>
+          <circle cx="115" cy="12" r="7" fill="#8EB1D1" opacity="0.5"/>
+          <circle cx="115" cy="12" r="3" fill="#E8ECEF" opacity="0.6"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="footer-inner">
+      <p class="footer-names">Oshanie &amp; Ninura</p>
+      <div class="footer-divider" aria-hidden="true">◆</div>
+      <p class="footer-date">8 August 2026</p>
+      <p class="footer-tagline">World Happiness Happens Day</p>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="#hero">Home</a>
+        <a href="#details">Details</a>
+        <a href="#rsvp">RSVP</a>
+        <a href="/admin">Admin</a>
+      </nav>
+      <p class="footer-legal">Made with 💙 for Akka &amp; Aiya</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

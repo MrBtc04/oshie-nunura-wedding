@@ -394,6 +394,7 @@
       attending: formData.get('attending'),
       dietary:   formData.get('dietary')?.trim() || '',
       message:   formData.get('message')?.trim() || '',
+      eventType: formData.get('eventType')?.trim() || 'wedding',
     };
 
     if (!validateForm(data)) return;
