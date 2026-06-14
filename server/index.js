@@ -236,17 +236,48 @@ app.get('/api/admin/rsvps', requireAdmin, async (req, res) => {
 
 app.get('/api/admin/stats', requireAdmin, async (req, res) => {
   try {
-    const [total, attending, notAtt, guests] = await Promise.all([
-      sql`SELECT COUNT(*) as c FROM rsvps`,
-      sql`SELECT COUNT(*) as c FROM rsvps WHERE attending = 1`,
-      sql`SELECT COUNT(*) as c FROM rsvps WHERE attending = 0`,
-      sql`SELECT COALESCE(SUM(guests),0) as c FROM rsvps WHERE attending = 1`,
-    ]);
+    const rsvps = await sql`SELECT guests, attending, events_attending, menu_choices FROM rsvps`;
+    
+    let total = 0, attending = 0, notAttending = 0, totalGuests = 0;
+    let church = 0, reception = 0;
+    const menuCounts = { starter: {}, soup: {}, main: {}, dessert: {}, beverage: {} };
+
+    for (const r of rsvps) {
+      total++;
+      if (r.attending === 1) {
+        attending++;
+        totalGuests += (r.guests || 1);
+        
+        const ev = (r.events_attending || '').toLowerCase();
+        if (ev.includes('church')) church += (r.guests || 1);
+        if (ev.includes('reception')) reception += (r.guests || 1);
+
+        if (r.menu_choices) {
+          const parts = r.menu_choices.split(';');
+          for (const p of parts) {
+            const match = p.trim().match(/:\s*(.*?)\s*\/\s*(.*?)\s*\/\s*(.*?)\s*\/\s*(.*?)\s*\[(.*?)\]/);
+            if (match) {
+              const [_, st, sp, ma, de, bv] = match;
+              menuCounts.starter[st] = (menuCounts.starter[st] || 0) + 1;
+              menuCounts.soup[sp] = (menuCounts.soup[sp] || 0) + 1;
+              menuCounts.main[ma] = (menuCounts.main[ma] || 0) + 1;
+              menuCounts.dessert[de] = (menuCounts.dessert[de] || 0) + 1;
+              menuCounts.beverage[bv] = (menuCounts.beverage[bv] || 0) + 1;
+            }
+          }
+        }
+      } else {
+        notAttending++;
+      }
+    }
+
     res.json({
-      total: parseInt(total[0].c),
-      attending: parseInt(attending[0].c),
-      notAttending: parseInt(notAtt[0].c),
-      totalGuests: parseInt(guests[0].c),
+      total,
+      attending,
+      notAttending,
+      totalGuests,
+      events: { church, reception },
+      menu: menuCounts
     });
   } catch (err) {
     res.status(500).json({ error: 'Failed to load stats.' });

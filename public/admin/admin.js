@@ -230,7 +230,8 @@ async function loadStats() {
   }
 }
 
-function updateStats({ total, attending, notAttending, totalGuests }) {
+function updateStats(data) {
+  const { total, attending, notAttending, totalGuests, events, menu } = data;
   if (statTotal)     statTotal.textContent     = total;
   if (statAttending) statAttending.textContent = attending;
   if (statNotAtt)    statNotAtt.textContent    = notAttending;
@@ -258,6 +259,51 @@ function updateStats({ total, attending, notAttending, totalGuests }) {
     if (progressFill) progressFill.style.width = `${pct}%`;
     if (progressPct)  progressPct.textContent  = `${pct}%`;
     if (progressBarEl) progressBarEl.setAttribute('aria-valuenow', pct);
+  }
+
+  const detailedBreakdown = document.getElementById('detailed-breakdown');
+  if (detailedBreakdown && events && menu) {
+    let menuHtml = '';
+    const categories = [
+      { key: 'starter', label: 'Starters' },
+      { key: 'soup', label: 'Soups' },
+      { key: 'main', label: 'Mains' },
+      { key: 'dessert', label: 'Desserts' },
+      { key: 'beverage', label: 'Beverages' }
+    ];
+    
+    categories.forEach(cat => {
+      const items = menu[cat.key];
+      if (Object.keys(items).length > 0) {
+        menuHtml += `<div style="margin-bottom: 8px;"><strong style="color: #fff;">${cat.label}:</strong><ul style="margin: 4px 0 0 16px; padding: 0;">`;
+        for (const [name, count] of Object.entries(items)) {
+          menuHtml += `<li>${name}: ${count}</li>`;
+        }
+        menuHtml += `</ul></div>`;
+      }
+    });
+
+    detailedBreakdown.innerHTML = `
+      <div style="margin-bottom: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
+        <h4 style="font-size: 0.95rem; margin-bottom: 12px; color: var(--text-light);">Events Breakdown</h4>
+        <div class="legend-row">
+          <div class="legend-dot" style="background:#8EB1D1; width:6px; height:6px;"></div>
+          <div><p class="legend-label">Church</p><p class="legend-val">${events.church}</p></div>
+        </div>
+        <div class="legend-row" style="margin-top:12px;">
+          <div class="legend-dot" style="background:#8EB1D1; width:6px; height:6px;"></div>
+          <div><p class="legend-label">Reception</p><p class="legend-val">${events.reception}</p></div>
+        </div>
+      </div>
+      ${menuHtml ? `
+        <div>
+          <h4 style="font-size: 0.95rem; margin-bottom: 12px; color: var(--text-light);">Menu Selections</h4>
+          <div style="font-size: 0.85rem; color: #a9b5c2; line-height: 1.5;">
+            ${menuHtml}
+          </div>
+        </div>
+      ` : ''}
+    `;
   }
 }
 
