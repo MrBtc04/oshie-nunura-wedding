@@ -1846,7 +1846,8 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
   display: block;
 }
 
-.beverage-option input[type="radio"] {
+.beverage-option input[type="radio"],
+.beverage-option input[type="checkbox"] {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -1858,7 +1859,10 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
 }
 
 .beverage-option span {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   text-align: center;
   padding: 12px;
   border-radius: 100px;
@@ -1869,11 +1873,33 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
   transition: all var(--transition-fast);
 }
 
-.beverage-option input[type="radio"]:checked + span {
+.beverage-option input[type="radio"]:checked + span,
+.beverage-option input[type="checkbox"]:checked + span {
   background: var(--baby-blue);
   border-color: var(--baby-blue);
   color: var(--midnight-blue);
   font-weight: 700;
+}
+
+.beverage-option input[type="checkbox"] + span::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.2s ease;
+  background-color: transparent;
+  background-position: center;
+  background-size: 80%;
+  background-repeat: no-repeat;
+  flex-shrink: 0;
+}
+
+.beverage-option input[type="checkbox"]:checked + span::before {
+  border-color: var(--midnight-blue);
+  background-color: var(--midnight-blue);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%238EB1D1' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
 }
 
 .beverage-option:hover span {
