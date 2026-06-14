@@ -20,16 +20,17 @@ async function initDb() {
   try {
     await sql`
       CREATE TABLE IF NOT EXISTS rsvps (
-        id          SERIAL PRIMARY KEY,
-        name        TEXT    NOT NULL,
-        email       TEXT,
-        phone       TEXT,
-        guests      INTEGER NOT NULL DEFAULT 1,
-        attending   INTEGER NOT NULL DEFAULT 1,
-        dietary     TEXT,
-        message     TEXT,
-        event_type  VARCHAR(50) DEFAULT 'wedding',
-        created_at  TIMESTAMPTZ DEFAULT NOW()
+        id            SERIAL PRIMARY KEY,
+        name          TEXT    NOT NULL,
+        email         TEXT,
+        phone         TEXT,
+        guests        INTEGER NOT NULL DEFAULT 1,
+        attending     INTEGER NOT NULL DEFAULT 1,
+        dietary       TEXT,
+        message       TEXT,
+        event_type    VARCHAR(50) DEFAULT 'wedding',
+        menu_choices  TEXT,
+        created_at    TIMESTAMPTZ DEFAULT NOW()
       )
     `;
     // Ensure email is optional in case table was created with NOT NULL previously
@@ -38,6 +39,13 @@ async function initDb() {
     // Add event_type column if it doesn't exist
     try {
       await sql`ALTER TABLE rsvps ADD COLUMN event_type VARCHAR(50) DEFAULT 'wedding'`;
+    } catch (e) {
+      // Column might already exist, ignore error
+    }
+
+    // Add menu_choices column if it doesn't exist
+    try {
+      await sql`ALTER TABLE rsvps ADD COLUMN menu_choices TEXT`;
     } catch (e) {
       // Column might already exist, ignore error
     }
@@ -127,7 +135,7 @@ function requireAdmin(req, res, next) {
 
 // ─── RSVP Routes ───────────────────────────────────────────────────────────────
 app.post('/api/rsvp', rsvpLimiter, async (req, res) => {
-  const { name, email, phone, guests, attending, dietary, message, eventType } = req.body;
+  const { name, email, phone, guests, attending, dietary, message, eventType, menuChoices } = req.body;
 
   if (!name || !name.trim()) return res.status(400).json({ error: 'Full name is required.' });
 
@@ -146,7 +154,7 @@ app.post('/api/rsvp', rsvpLimiter, async (req, res) => {
     const emailValue = email && email.trim() ? email.trim().toLowerCase() : null;
 
     const result = await sql`
-      INSERT INTO rsvps (name, email, phone, guests, attending, dietary, message, event_type)
+      INSERT INTO rsvps (name, email, phone, guests, attending, dietary, message, event_type, menu_choices)
       VALUES (
         ${name.trim()},
         ${emailValue},
@@ -155,7 +163,8 @@ app.post('/api/rsvp', rsvpLimiter, async (req, res) => {
         ${attendingBool ? 1 : 0},
         ${dietary ? dietary.trim() : null},
         ${message ? message.trim() : null},
-        ${event}
+        ${event},
+        ${menuChoices ? menuChoices.trim() : null}
       )
       RETURNING id
     `;
@@ -244,7 +253,7 @@ app.delete('/api/admin/rsvps/:id', requireAdmin, async (req, res) => {
 app.get('/api/admin/export', requireAdmin, async (req, res) => {
   try {
     const rows = await sql`SELECT * FROM rsvps ORDER BY created_at DESC`;
-    const header = ['ID', 'Name', 'Email', 'Phone', 'Guests', 'Attending', 'Event', 'Dietary', 'Message', 'Submitted At'];
+    const header = ['ID', 'Name', 'Email', 'Phone', 'Guests', 'Attending', 'Event', 'Dietary', 'Menu Choices', 'Message', 'Submitted At'];
     const lines = rows.map(r => [
       r.id,
       `"${(r.name || '').replace(/"/g, '""')}"`,
@@ -254,6 +263,7 @@ app.get('/api/admin/export', requireAdmin, async (req, res) => {
       r.attending ? 'Yes' : 'No',
       r.event_type === 'meal' ? 'Meal' : 'Wedding',
       `"${(r.dietary || '').replace(/"/g, '""')}"`,
+      `"${(r.menu_choices || '').replace(/"/g, '""')}"`,
       `"${(r.message || '').replace(/"/g, '""')}"`,
       `"${r.created_at}"`,
     ].join(','));
@@ -268,7 +278,7 @@ app.get('/api/admin/export', requireAdmin, async (req, res) => {
 
 // ─── Page Routes ───────────────────────────────────────────────────────────────
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../public/index.html')));
-app.get('/reception-invite-oshie-ninura-private-8826', (req, res) => res.sendFile(path.join(__dirname, '../public/meal.html')));
+app.get('/reception-invite-oshie-ninura-private-8826', (req, res) => res.sendFile(path.join(__dirname, '../public/reception-invite-oshie-ninura-private-8826.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, '../public/admin/index.html')));
 app.get('/admin/*', (req, res) => res.sendFile(path.join(__dirname, '../public/admin/index.html')));
 

@@ -293,6 +293,7 @@ function renderTable(rows) {
         </span>
       </td>
       <td class="td-dietary">${escapeHtml(r.dietary) || '—'}</td>
+      <td class="td-menu-choices" title="${escapeHtml(r.menu_choices)}">${escapeHtml(r.menu_choices) || '—'}</td>
       <td class="td-message" title="${escapeHtml(r.message)}">${escapeHtml(r.message) || '—'}</td>
       <td class="td-ts">${formatDate(r.created_at)}</td>
       <td>

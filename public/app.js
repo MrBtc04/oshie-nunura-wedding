@@ -329,15 +329,169 @@
 
   decBtn.addEventListener('click', () => {
     const val = parseInt(display.value, 10);
-    if (val > MIN) { display.value = val - 1; updateButtons(); }
+    if (val > MIN) {
+      display.value = val - 1;
+      updateButtons();
+      display.dispatchEvent(new Event('change', { bubbles: true }));
+    }
   });
 
   incBtn.addEventListener('click', () => {
     const val = parseInt(display.value, 10);
-    if (val < MAX) { display.value = val + 1; updateButtons(); }
+    if (val < MAX) {
+      display.value = val + 1;
+      updateButtons();
+      display.dispatchEvent(new Event('change', { bubbles: true }));
+    }
   });
 
   updateButtons();
+})();
+
+// ─── Guest Menu Selections (Reception RSVP only) ──────────────────────────────
+(function initGuestMenuSelections() {
+  const container = document.getElementById('guest-menu-selections');
+  const guestsInput = document.getElementById('guests');
+  const rsvpForm = document.getElementById('rsvp-form');
+  if (!container || !guestsInput || !rsvpForm) return;
+
+  function renderGuestFields(count) {
+    const prevSelections = captureSelections();
+    container.innerHTML = '';
+
+    for (let i = 1; i <= count; i++) {
+      const card = document.createElement('div');
+      card.className = 'guest-selection-card';
+      
+      const isFirst = i === 1;
+      const headerText = isFirst ? 'Guest 1 (You)' : `Guest ${i}`;
+      
+      let nameFieldHtml = '';
+      if (!isFirst) {
+        const prevName = prevSelections[i]?.name || '';
+        nameFieldHtml = `
+          <div class="form-group">
+            <label class="form-label" for="guest_${i}_name">Full Name <span class="form-required" aria-label="required">*</span></label>
+            <input class="form-input guest-name-input" type="text" id="guest_${i}_name" placeholder="Guest ${i} full name" required value="${prevName}" />
+            <span class="form-error" id="guest_${i}_name-error" role="alert"></span>
+          </div>
+        `;
+      }
+
+      const prevPlate = prevSelections[i]?.plate || 'Grilled Salmon';
+      const prevBeverage = prevSelections[i]?.beverage || 'Alcoholic';
+
+      card.innerHTML = `
+        <div class="guest-selection-header">${headerText}</div>
+        ${nameFieldHtml}
+        <div class="form-group">
+          <label class="form-label">Select Plate Choice <span class="form-required" aria-label="required">*</span></label>
+          <div class="menu-choices-grid">
+            <label class="menu-choice-option">
+              <input type="radio" name="guest_${i}_plate" value="Grilled Salmon" ${prevPlate === 'Grilled Salmon' ? 'checked' : ''} />
+              <span class="menu-choice-box">
+                <strong>Grilled Salmon</strong>
+                <span class="menu-choice-desc">Lemon butter, wild rice & asparagus</span>
+              </span>
+            </label>
+            <label class="menu-choice-option">
+              <input type="radio" name="guest_${i}_plate" value="Slow-Roasted Beef" ${prevPlate === 'Slow-Roasted Beef' ? 'checked' : ''} />
+              <span class="menu-choice-box">
+                <strong>Slow-Roasted Beef</strong>
+                <span class="menu-choice-desc">Truffle mash, roast veg & red wine reduction</span>
+              </span>
+            </label>
+            <label class="menu-choice-option">
+              <input type="radio" name="guest_${i}_plate" value="Vegetarian Cannelloni" ${prevPlate === 'Vegetarian Cannelloni' ? 'checked' : ''} />
+              <span class="menu-choice-box">
+                <strong>Vegetarian</strong>
+                <span class="menu-choice-desc">Spinach & Ricotta Cannelloni, tomato sauce</span>
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Beverage Preference <span class="form-required" aria-label="required">*</span></label>
+          <div class="menu-beverage-toggle">
+            <label class="beverage-option">
+              <input type="radio" name="guest_${i}_beverage" value="Alcoholic" ${prevBeverage === 'Alcoholic' ? 'checked' : ''} />
+              <span>Alcoholic</span>
+            </label>
+            <label class="beverage-option">
+              <input type="radio" name="guest_${i}_beverage" value="Non-Alcoholic" ${prevBeverage === 'Non-Alcoholic' ? 'checked' : ''} />
+              <span>Non-Alcoholic</span>
+            </label>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+
+      // Setup real-time validation on typing
+      if (!isFirst) {
+        const input = card.querySelector('.guest-name-input');
+        input?.addEventListener('input', () => {
+          if (input.value.trim().length >= 2) {
+            input.classList.remove('is-invalid');
+            const errorEl = document.getElementById(`guest_${i}_name-error`);
+            if (errorEl) errorEl.textContent = '';
+          }
+        });
+      }
+    }
+  }
+
+  function captureSelections() {
+    const selections = {};
+    const cards = container.querySelectorAll('.guest-selection-card');
+    cards.forEach((card, index) => {
+      const i = index + 1;
+      const nameInput = card.querySelector('.guest-name-input');
+      const name = nameInput ? nameInput.value.trim() : '';
+      const plate = card.querySelector(`input[name="guest_${i}_plate"]:checked`)?.value || '';
+      const beverage = card.querySelector(`input[name="guest_${i}_beverage"]:checked`)?.value || '';
+      selections[i] = { name, plate, beverage };
+    });
+    return selections;
+  }
+
+  // Initial render
+  renderGuestFields(parseInt(guestsInput.value, 10));
+
+  // Re-render when count changes
+  guestsInput.addEventListener('change', () => {
+    const val = parseInt(guestsInput.value, 10) || 1;
+    renderGuestFields(val);
+  });
+
+  // Expose helper to validate and gather choices during submit
+  window.getMenuSelectionsData = function() {
+    let valid = true;
+    const cards = container.querySelectorAll('.guest-selection-card');
+    const selections = [];
+
+    cards.forEach((card, index) => {
+      const i = index + 1;
+      const nameInput = card.querySelector('.guest-name-input');
+      let name = '';
+      if (nameInput) {
+        name = nameInput.value.trim();
+        const errorEl = document.getElementById(`guest_${i}_name-error`);
+        if (!name || name.length < 2) {
+          nameInput.classList.add('is-invalid');
+          if (errorEl) errorEl.textContent = 'Please enter guest name.';
+          valid = false;
+        } else {
+          nameInput.classList.remove('is-invalid');
+          if (errorEl) errorEl.textContent = '';
+        }
+      }
+      const plate = card.querySelector(`input[name="guest_${i}_plate"]:checked`)?.value || 'Grilled Salmon';
+      const beverage = card.querySelector(`input[name="guest_${i}_beverage"]:checked`)?.value || 'Alcoholic';
+      selections.push({ guestNum: i, name, plate, beverage });
+    });
+
+    return { valid, selections };
+  };
 })();
 
 // ─── RSVP Form Submission ─────────────────────────────────────────────────────
@@ -387,6 +541,19 @@
     globalError.textContent = '';
 
     const formData = new FormData(form);
+    
+    let menuChoicesStr = null;
+    if (typeof window.getMenuSelectionsData === 'function') {
+      const { valid, selections } = window.getMenuSelectionsData();
+      if (!valid) return;
+      
+      // Format selections as a readable string: "Guest 1 (You): Salmon [Alcoholic]; Guest 2 (John): Beef [Non-Alcoholic]"
+      menuChoicesStr = selections.map(s => {
+        const label = s.guestNum === 1 ? 'Guest 1 (You)' : `Guest ${s.guestNum} (${s.name})`;
+        return `${label}: ${s.plate} [${s.beverage}]`;
+      }).join('; ');
+    }
+
     const data = {
       name:      formData.get('name')?.trim(),
       phone:     formData.get('phone')?.trim() || '',
@@ -395,6 +562,7 @@
       dietary:   formData.get('dietary')?.trim() || '',
       message:   formData.get('message')?.trim() || '',
       eventType: formData.get('eventType')?.trim() || 'wedding',
+      menuChoices: menuChoicesStr
     };
 
     if (!validateForm(data)) return;

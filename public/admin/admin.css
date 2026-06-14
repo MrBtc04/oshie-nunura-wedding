@@ -749,6 +749,7 @@ body {
 .rsvp-table td.td-email  { color: var(--text-muted); font-size: 0.8rem; }
 .rsvp-table td.td-ts     { color: var(--text-dim);   font-size: 0.78rem; }
 .rsvp-table td.td-dietary,
+.rsvp-table td.td-menu-choices,
 .rsvp-table td.td-message { max-width: 140px; color: var(--text-muted); }
 
 .badge {
