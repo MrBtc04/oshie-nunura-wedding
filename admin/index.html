@@ -3,284 +3,288 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin — Oshanie & Ninura Wedding RSVP</title>
+  <title>Admin — Oshanie & Ninura Wedding</title>
   <meta name="robots" content="noindex, nofollow" />
-
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Great+Vibes&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Great+Vibes&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="admin.css" />
 </head>
 <body>
 
-  <!-- ═══════════════════════════════════════════════════════════ LOGIN VIEW -->
+  <!-- ══════════════════════════════════════════════════════════ LOGIN VIEW -->
   <div id="login-view" class="login-view">
-    <!-- Background florals -->
-    <div class="login-floral login-floral--tl" aria-hidden="true">
-      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <g opacity="0.4">
-          <path d="M10,190 Q60,120 120,60 Q160,25 190,10" stroke="#A7C7E7" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <ellipse cx="90" cy="95" rx="18" ry="8" fill="#8EB1D1" opacity="0.5" transform="rotate(-40,90,95)"/>
-          <ellipse cx="140" cy="45" rx="13" ry="6" fill="#A7C7E7" opacity="0.5" transform="rotate(-55,140,45)"/>
-          <circle cx="188" cy="12" r="12" fill="#A7C7E7" opacity="0.5"/>
-          <circle cx="188" cy="12" r="5" fill="#E8ECEF" opacity="0.7"/>
-          <circle cx="170" cy="5" r="8" fill="#8EB1D1" opacity="0.4"/>
-        </g>
-      </svg>
-    </div>
-    <div class="login-floral login-floral--br" aria-hidden="true">
-      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <g opacity="0.4" transform="scale(-1,-1) translate(-200,-200)">
-          <path d="M10,190 Q60,120 120,60 Q160,25 190,10" stroke="#A7C7E7" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <ellipse cx="90" cy="95" rx="18" ry="8" fill="#8EB1D1" opacity="0.5" transform="rotate(-40,90,95)"/>
-          <ellipse cx="140" cy="45" rx="13" ry="6" fill="#A7C7E7" opacity="0.5" transform="rotate(-55,140,45)"/>
-          <circle cx="188" cy="12" r="12" fill="#A7C7E7" opacity="0.5"/>
-          <circle cx="188" cy="12" r="5" fill="#E8ECEF" opacity="0.7"/>
-          <circle cx="170" cy="5" r="8" fill="#8EB1D1" opacity="0.4"/>
-        </g>
-      </svg>
+    <div class="login-bg">
+      <div class="login-orb login-orb--1"></div>
+      <div class="login-orb login-orb--2"></div>
+      <div class="login-orb login-orb--3"></div>
     </div>
 
     <div class="login-card">
-      <div class="login-logo">
-        <p class="login-names">Oshanie &amp; Ninura</p>
-        <p class="login-subtitle">Wedding Administration</p>
+      <div class="login-header">
+        <p class="login-cursive">Oshanie & Ninura</p>
+        <p class="login-date">8 · 8 · 2026</p>
+        <div class="login-divider"></div>
+        <h1 class="login-title">Admin Panel</h1>
+        <p class="login-desc">Enter your password to access the dashboard</p>
       </div>
 
       <form id="login-form" novalidate>
-        <div class="form-group">
-          <label class="form-label" for="password">Password</label>
-          <input type="password" id="password" name="password" class="form-input" placeholder="Enter admin password" autocomplete="current-password" required />
-          <span class="form-error" id="login-error" role="alert"></span>
+        <div class="field-group">
+          <label class="field-label" for="password">Password</label>
+          <div class="field-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input type="password" id="password" name="password" class="field-input" placeholder="Enter password" autocomplete="current-password" required />
+            <button type="button" class="field-toggle" id="pw-toggle" aria-label="Toggle password visibility">
+              <svg id="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg id="eye-closed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" hidden><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+          </div>
+          <span class="field-error" id="login-error" role="alert"></span>
         </div>
-        <button type="submit" class="btn btn--primary btn--full" id="login-btn">
-          <span class="btn__text">Sign In</span>
-          <span class="btn__spinner" aria-hidden="true"></span>
+
+        <button type="submit" class="login-btn" id="login-btn">
+          <span class="login-btn__text">Sign In</span>
+          <span class="login-btn__spinner" aria-hidden="true"></span>
         </button>
       </form>
 
-      <a href="/" class="login-back">← Back to RSVP Page</a>
+      <a href="/" class="login-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to Wedding Site
+      </a>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════ DASHBOARD VIEW -->
-  <div id="dashboard-view" class="dashboard-view" hidden>
+  <!-- ══════════════════════════════════════════════════════ DASHBOARD VIEW -->
+  <div id="dashboard-view" class="dashboard" hidden>
 
     <!-- Sidebar -->
-    <aside class="sidebar" role="complementary" aria-label="Admin sidebar">
-      <div class="sidebar-logo">
-        <p class="sidebar-names">Oshanie &amp; Ninura</p>
-        <p class="sidebar-date">8 · 8 · 2026</p>
+    <aside class="sidebar" id="sidebar" role="complementary" aria-label="Admin sidebar">
+      <div class="sidebar-brand">
+        <p class="sidebar-cursive">O & N</p>
+        <p class="sidebar-wedding">Wedding · 2026</p>
       </div>
-      <nav class="sidebar-nav" aria-label="Admin navigation">
-        <button class="sidebar-nav-btn is-active" id="nav-dashboard" data-view="overview">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-          Dashboard
+
+      <nav class="sidebar-nav" aria-label="Dashboard navigation">
+        <button class="nav-item is-active" data-view="overview" id="nav-overview">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+          <span>Overview</span>
         </button>
-        <button class="sidebar-nav-btn" id="nav-rsvps" data-view="rsvps">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          All RSVPs
+        <button class="nav-item" data-view="rsvps" id="nav-rsvps">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span>All RSVPs</span>
         </button>
       </nav>
-      <button class="sidebar-logout" id="logout-btn" aria-label="Sign out">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Sign Out
+
+      <button class="sidebar-logout" id="logout-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        <span>Sign Out</span>
       </button>
     </aside>
 
-    <!-- Main content -->
-    <main class="main-content" role="main">
+    <!-- Mobile top bar -->
+    <header class="topbar">
+      <button class="topbar-burger" id="burger-btn" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <span class="topbar-title" id="topbar-title">Overview</span>
+      <button class="topbar-logout" id="mobile-logout-btn" aria-label="Sign out">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </button>
+    </header>
 
-      <!-- Mobile header -->
-      <header class="mobile-header">
-        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <span class="mobile-header-title">Admin Dashboard</span>
-        <button class="mobile-logout-btn" id="mobile-logout-btn" aria-label="Sign out">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        </button>
-      </header>
+    <!-- Main -->
+    <main class="main" role="main">
 
-      <!-- ─── Overview Section ──────────────────────────────────────── -->
-      <section id="view-overview" class="view-section">
-        <div class="view-header">
-          <h1 class="view-title">Dashboard</h1>
-          <p class="view-subtitle">RSVP overview for Oshanie &amp; Ninura, 8 August 2026</p>
+      <!-- ── Overview ─────────────────────────────────────────────────── -->
+      <section id="view-overview" class="view active">
+
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Dashboard</h2>
+            <p class="page-sub">RSVP overview for Oshanie & Ninura · 8 August 2026</p>
+          </div>
+          <div class="page-badge" id="last-updated"></div>
         </div>
 
         <!-- Stat cards -->
-        <div class="stats-grid" role="list" aria-label="RSVP statistics">
-          <div class="stat-card" role="listitem">
-            <div class="stat-card__icon stat-card__icon--blue" aria-hidden="true">
+        <div class="stats-grid">
+          <div class="stat-card stat-card--blue">
+            <div class="stat-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
-            <div>
-              <p class="stat-card__label">Total RSVPs</p>
-              <p class="stat-card__value" id="stat-total">—</p>
+            <div class="stat-body">
+              <p class="stat-label">Total RSVPs</p>
+              <p class="stat-value" id="stat-total">—</p>
             </div>
           </div>
-          <div class="stat-card" role="listitem">
-            <div class="stat-card__icon stat-card__icon--green" aria-hidden="true">
+          <div class="stat-card stat-card--green">
+            <div class="stat-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
-            <div>
-              <p class="stat-card__label">Attending</p>
-              <p class="stat-card__value" id="stat-attending">—</p>
+            <div class="stat-body">
+              <p class="stat-label">Attending</p>
+              <p class="stat-value" id="stat-attending">—</p>
             </div>
           </div>
-          <div class="stat-card" role="listitem">
-            <div class="stat-card__icon stat-card__icon--red" aria-hidden="true">
+          <div class="stat-card stat-card--red">
+            <div class="stat-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </div>
-            <div>
-              <p class="stat-card__label">Not Attending</p>
-              <p class="stat-card__value" id="stat-not-attending">—</p>
+            <div class="stat-body">
+              <p class="stat-label">Not Attending</p>
+              <p class="stat-value" id="stat-not-attending">—</p>
             </div>
           </div>
-          <div class="stat-card" role="listitem">
-            <div class="stat-card__icon stat-card__icon--blue" aria-hidden="true">
+          <div class="stat-card stat-card--purple">
+            <div class="stat-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
-            <div>
-              <p class="stat-card__label">Total Guests</p>
-              <p class="stat-card__value" id="stat-guests">—</p>
+            <div class="stat-body">
+              <p class="stat-label">Total Guests</p>
+              <p class="stat-value" id="stat-guests">—</p>
             </div>
           </div>
         </div>
 
-        <!-- Chart Card -->
+        <!-- Chart -->
         <div class="chart-card">
-          <h2 class="chart-card__title">Attendance Breakdown</h2>
-          <div class="chart-layout">
-            <!-- Donut chart (SVG-based) -->
-            <div class="donut-wrapper" role="img" aria-label="Donut chart showing attendance breakdown" aria-describedby="donut-desc">
-              <p id="donut-desc" class="sr-only">Visual breakdown of attending vs not attending RSVPs</p>
-              <svg id="donut-chart" viewBox="0 0 160 160" class="donut-svg" aria-hidden="true">
-                <circle cx="80" cy="80" r="60" fill="none" stroke="#eee" stroke-width="22"/>
-                <circle id="donut-yes" cx="80" cy="80" r="60" fill="none" stroke="#A7C7E7" stroke-width="22"
-                        stroke-dasharray="0 377" stroke-linecap="round"
-                        transform="rotate(-90 80 80)" style="transition: stroke-dasharray 1s ease"/>
-                <circle id="donut-no"  cx="80" cy="80" r="60" fill="none" stroke="#e06c7d" stroke-width="22"
-                        stroke-dasharray="0 377" stroke-linecap="round"
-                        transform="rotate(-90 80 80)" style="transition: stroke-dasharray 1s ease; opacity:0.6"/>
-                <text x="80" y="74" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="22" fill="#1C2B48" id="donut-center-num">—</text>
-                <text x="80" y="92" text-anchor="middle" font-family="Lato, sans-serif" font-size="8" fill="#7a9ab8" letter-spacing="1">RSVPS</text>
+          <h3 class="chart-title">Attendance Breakdown</h3>
+          <div class="chart-body">
+            <div class="donut-wrap" role="img" aria-label="Attendance donut chart">
+              <svg viewBox="0 0 160 160" class="donut-svg" aria-hidden="true">
+                <circle cx="80" cy="80" r="58" fill="none" stroke="#1e2d45" stroke-width="20"/>
+                <circle id="donut-yes" cx="80" cy="80" r="58" fill="none" stroke="#8EB1D1" stroke-width="20"
+                        stroke-dasharray="0 365" stroke-linecap="round"
+                        transform="rotate(-90 80 80)" style="transition:stroke-dasharray 1.2s cubic-bezier(.4,0,.2,1)"/>
+                <circle id="donut-no" cx="80" cy="80" r="58" fill="none" stroke="#e06c7d" stroke-width="20"
+                        stroke-dasharray="0 365" stroke-linecap="round" opacity="0.75"
+                        transform="rotate(-90 80 80)" style="transition:stroke-dasharray 1.2s cubic-bezier(.4,0,.2,1)"/>
+                <text x="80" y="73" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-size="26" fill="#e8ecef" id="donut-center-num">—</text>
+                <text x="80" y="91" text-anchor="middle" font-family="Inter,sans-serif" font-size="7.5" fill="#5a7a9a" letter-spacing="2">RSVPS</text>
               </svg>
             </div>
 
             <div class="chart-legend">
-              <div class="legend-item">
-                <div class="legend-dot legend-dot--blue"></div>
+              <div class="legend-row">
+                <div class="legend-dot" style="background:#8EB1D1"></div>
                 <div>
                   <p class="legend-label">Attending</p>
-                  <p class="legend-value" id="legend-attending">—</p>
+                  <p class="legend-val" id="legend-attending">—</p>
                 </div>
               </div>
-              <div class="legend-item">
-                <div class="legend-dot legend-dot--red"></div>
+              <div class="legend-row">
+                <div class="legend-dot" style="background:#e06c7d"></div>
                 <div>
                   <p class="legend-label">Not Attending</p>
-                  <p class="legend-value" id="legend-not-attending">—</p>
+                  <p class="legend-val" id="legend-not-attending">—</p>
                 </div>
               </div>
 
-              <!-- Attendance bar -->
-              <div class="attend-bar-wrapper">
-                <div class="attend-bar-labels">
-                  <span>Attending</span>
-                  <span id="attend-bar-pct">0%</span>
+              <div class="progress-wrap">
+                <div class="progress-labels">
+                  <span>Attendance Rate</span>
+                  <span id="attend-pct">0%</span>
                 </div>
-                <div class="attend-bar" role="progressbar" aria-label="Attendance rate" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                  <div class="attend-bar__fill" id="attend-bar-fill" style="width: 0%"></div>
+                <div class="progress-bar" role="progressbar" aria-label="Attendance rate" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="progress-bar-el">
+                  <div class="progress-fill" id="progress-fill"></div>
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- Data table for screen reader accessibility -->
-          <table class="sr-only" id="donut-data-table" aria-label="Attendance data">
-            <caption>RSVP Attendance Breakdown</caption>
-            <thead><tr><th>Status</th><th>Count</th></tr></thead>
-            <tbody>
-              <tr><td>Attending</td><td id="table-attending">—</td></tr>
-              <tr><td>Not Attending</td><td id="table-not-attending">—</td></tr>
-            </tbody>
-          </table>
         </div>
+
       </section>
 
-      <!-- ─── RSVPs List Section ────────────────────────────────────── -->
-      <section id="view-rsvps" class="view-section" hidden>
-        <div class="view-header">
+      <!-- ── RSVPs ────────────────────────────────────────────────────── -->
+      <section id="view-rsvps" class="view" hidden>
+
+        <div class="page-header">
           <div>
-            <h1 class="view-title">All RSVPs</h1>
-            <p class="view-subtitle">Manage and review all submissions</p>
+            <h2 class="page-title">All RSVPs</h2>
+            <p class="page-sub">Manage and review all guest submissions</p>
           </div>
-          <div class="view-actions">
-            <a href="/api/admin/export" class="btn btn--outline" id="export-btn" target="_blank">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-              Export CSV
-            </a>
-          </div>
+          <button class="export-btn" id="export-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Export CSV
+          </button>
         </div>
 
-        <!-- Search bar -->
-        <div class="search-bar">
-          <label class="sr-only" for="search-input">Search RSVPs by name or email</label>
-          <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          <input type="search" id="search-input" class="search-bar__input" placeholder="Search by name or email…" autocomplete="off" />
-          <button class="search-bar__clear" id="search-clear" aria-label="Clear search" hidden>×</button>
+        <div class="search-row">
+          <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="search" id="search-input" class="search-input" placeholder="Search by name or email…" autocomplete="off" />
+            <button class="search-clear" id="search-clear" aria-label="Clear search" hidden>✕</button>
+          </div>
+          <p class="table-count" id="table-count" aria-live="polite"></p>
         </div>
 
-        <!-- Table wrapper -->
-        <div class="table-wrapper">
-          <div class="loading-state" id="table-loading" aria-label="Loading RSVPs">
-            <div class="spinner" aria-hidden="true"></div>
+        <div class="table-wrap">
+          <!-- Loading -->
+          <div class="state-loading" id="table-loading">
+            <div class="spinner"></div>
             <p>Loading RSVPs…</p>
           </div>
-          <div class="empty-state" id="table-empty" hidden>
-            <p class="empty-state__icon" aria-hidden="true">💙</p>
-            <p class="empty-state__msg">No RSVPs found</p>
-            <p class="empty-state__sub">Submissions will appear here as guests respond.</p>
+          <!-- Empty -->
+          <div class="state-empty" id="table-empty" hidden>
+            <p class="state-empty__icon">💙</p>
+            <p class="state-empty__msg">No RSVPs found</p>
+            <p class="state-empty__sub">Submissions will appear here as guests respond.</p>
           </div>
+          <!-- Table -->
           <table class="rsvp-table" id="rsvp-table" aria-label="RSVP submissions" hidden>
             <thead>
               <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Phone</th>
-                <th scope="col">Guests</th>
-                <th scope="col">Attending</th>
-                <th scope="col">Dietary</th>
-                <th scope="col">Message</th>
-                <th scope="col">Submitted</th>
-                <th scope="col"><span class="sr-only">Actions</span></th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Guests</th>
+                <th>Attending</th>
+                <th>Dietary</th>
+                <th>Message</th>
+                <th>Submitted</th>
+                <th><span class="sr-only">Actions</span></th>
               </tr>
             </thead>
-            <tbody id="rsvp-tbody">
-            </tbody>
+            <tbody id="rsvp-tbody"></tbody>
           </table>
         </div>
 
-        <p class="table-count" id="table-count" aria-live="polite"></p>
       </section>
 
     </main>
   </div>
 
-  <!-- Delete confirmation modal -->
+  <!-- Delete modal -->
   <div class="modal-backdrop" id="modal-backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+        </svg>
+      </div>
       <h2 id="modal-title" class="modal-title">Delete RSVP?</h2>
       <p class="modal-body" id="modal-body">Are you sure you want to delete this RSVP? This action cannot be undone.</p>
       <div class="modal-actions">
-        <button class="btn btn--outline" id="modal-cancel">Cancel</button>
-        <button class="btn btn--danger" id="modal-confirm">Delete</button>
+        <button class="modal-cancel" id="modal-cancel">Cancel</button>
+        <button class="modal-confirm" id="modal-confirm">Delete</button>
       </div>
     </div>
   </div>

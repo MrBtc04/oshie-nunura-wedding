@@ -3,18 +3,19 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
-const session = require('express-session');
 const rateLimit = require('express-rate-limit');
 const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
 const { neon } = require('@neondatabase/serverless');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET || 'dev_jwt_secret_change_in_production';
+const JWT_EXPIRES = '4h';
 
 // ─── Database Setup (Neon Postgres) ───────────────────────────────────────────
 const sql = neon(process.env.DATABASE_URL);
 
-// Initialize schema on startup
 async function initDb() {
   try {
     await sql`
@@ -42,20 +43,10 @@ app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'changeme_in_production',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 4, // 4 hours
-  },
-}));
 
 const rsvpLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10,
   message: { error: 'Too many submissions. Please try again later.' } });
-const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 5,
+const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10,
   message: { error: 'Too many login attempts. Please try again later.' } });
 
 // ─── Static Files ──────────────────────────────────────────────────────────────
@@ -107,8 +98,23 @@ async function sendConfirmationEmail(rsvp) {
   }
 }
 
-// ─── RSVP Routes ───────────────────────────────────────────────────────────────
+// ─── JWT Auth Middleware ───────────────────────────────────────────────────────
+function requireAdmin(req, res, next) {
+  const auth = req.headers['authorization'];
+  if (!auth || !auth.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized.' });
+  }
+  const token = auth.slice(7);
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    if (!payload.isAdmin) return res.status(401).json({ error: 'Unauthorized.' });
+    next();
+  } catch {
+    return res.status(401).json({ error: 'Token expired or invalid. Please log in again.' });
+  }
+}
 
+// ─── RSVP Routes ───────────────────────────────────────────────────────────────
 app.post('/api/rsvp', rsvpLimiter, async (req, res) => {
   const { name, email, phone, guests, attending, dietary, message } = req.body;
 
@@ -155,28 +161,22 @@ app.post('/api/rsvp', rsvpLimiter, async (req, res) => {
 });
 
 // ─── Admin Routes ──────────────────────────────────────────────────────────────
-
 app.post('/api/admin/login', loginLimiter, (req, res) => {
   const { password } = req.body;
   if (password === (process.env.ADMIN_PASSWORD || 'OshieNinura2026!')) {
-    req.session.isAdmin = true;
-    return res.json({ success: true });
+    const token = jwt.sign({ isAdmin: true }, JWT_SECRET, { expiresIn: JWT_EXPIRES });
+    return res.json({ success: true, token });
   }
   res.status(401).json({ error: 'Incorrect password.' });
 });
 
 app.post('/api/admin/logout', (req, res) => {
-  req.session.destroy();
+  // JWT is stateless — client simply deletes token
   res.json({ success: true });
 });
 
-function requireAdmin(req, res, next) {
-  if (req.session?.isAdmin) return next();
-  res.status(401).json({ error: 'Unauthorized.' });
-}
-
-app.get('/api/admin/check', (req, res) => {
-  res.json({ isAdmin: !!req.session?.isAdmin });
+app.get('/api/admin/check', requireAdmin, (req, res) => {
+  res.json({ isAdmin: true });
 });
 
 app.get('/api/admin/rsvps', requireAdmin, async (req, res) => {
