@@ -180,9 +180,13 @@ app.post('/api/rsvp', rsvpLimiter, async (req, res) => {
 
     sendConfirmationEmail({ name: name.trim(), email: emailValue, attending: attendingBool });
 
+    const successMsg = attendingBool 
+      ? "Thank you! We can't wait to celebrate with you 💙" 
+      : "Thank you for letting us know. You will be missed! 💙";
+
     res.status(201).json({
       success: true,
-      message: "Thank you! We can't wait to celebrate with you 💙",
+      message: successMsg,
       id: result[0].id,
     });
   } catch (err) {

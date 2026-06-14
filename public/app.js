@@ -611,6 +611,17 @@
 
       // Show success
       form.hidden = true;
+
+      const isAttending = data.attending === 'true' || data.attending === true;
+      const successMsgEl = successEl.querySelector('.rsvp-success__msg');
+      if (successMsgEl) {
+        if (isAttending) {
+          successMsgEl.textContent = "We can't wait to celebrate with you 💙";
+        } else {
+          successMsgEl.textContent = "We're so sorry you won't be able to make it. You will be missed! 💙";
+        }
+      }
+
       successEl.hidden = false;
       successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
