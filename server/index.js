@@ -30,6 +30,7 @@ async function initDb() {
         message       TEXT,
         event_type    VARCHAR(50) DEFAULT 'wedding',
         menu_choices  TEXT,
+        events_attending TEXT,
         created_at    TIMESTAMPTZ DEFAULT NOW()
       )
     `;
@@ -46,6 +47,13 @@ async function initDb() {
     // Add menu_choices column if it doesn't exist
     try {
       await sql`ALTER TABLE rsvps ADD COLUMN menu_choices TEXT`;
+    } catch (e) {
+      // Column might already exist, ignore error
+    }
+
+    // Add events_attending column if it doesn't exist
+    try {
+      await sql`ALTER TABLE rsvps ADD COLUMN events_attending TEXT`;
     } catch (e) {
       // Column might already exist, ignore error
     }
@@ -135,7 +143,7 @@ function requireAdmin(req, res, next) {
 
 // ─── RSVP Routes ───────────────────────────────────────────────────────────────
 app.post('/api/rsvp', rsvpLimiter, async (req, res) => {
-  const { name, email, phone, guests, attending, dietary, message, eventType, menuChoices } = req.body;
+  const { name, email, phone, guests, attending, dietary, message, eventType, menuChoices, eventsAttending } = req.body;
 
   if (!name || !name.trim()) return res.status(400).json({ error: 'Full name is required.' });
 
@@ -154,7 +162,7 @@ app.post('/api/rsvp', rsvpLimiter, async (req, res) => {
     const emailValue = email && email.trim() ? email.trim().toLowerCase() : null;
 
     const result = await sql`
-      INSERT INTO rsvps (name, email, phone, guests, attending, dietary, message, event_type, menu_choices)
+      INSERT INTO rsvps (name, email, phone, guests, attending, dietary, message, event_type, menu_choices, events_attending)
       VALUES (
         ${name.trim()},
         ${emailValue},
@@ -164,7 +172,8 @@ app.post('/api/rsvp', rsvpLimiter, async (req, res) => {
         ${dietary ? dietary.trim() : null},
         ${message ? message.trim() : null},
         ${event},
-        ${menuChoices ? menuChoices.trim() : null}
+        ${menuChoices ? menuChoices.trim() : null},
+        ${eventsAttending ? eventsAttending.trim() : null}
       )
       RETURNING id
     `;
@@ -253,7 +262,7 @@ app.delete('/api/admin/rsvps/:id', requireAdmin, async (req, res) => {
 app.get('/api/admin/export', requireAdmin, async (req, res) => {
   try {
     const rows = await sql`SELECT * FROM rsvps ORDER BY created_at DESC`;
-    const header = ['ID', 'Name', 'Email', 'Phone', 'Guests', 'Attending', 'Event', 'Dietary', 'Menu Choices', 'Message', 'Submitted At'];
+    const header = ['ID', 'Name', 'Email', 'Phone', 'Guests', 'Attending', 'Event', 'Events Attending', 'Dietary', 'Menu Choices', 'Message', 'Submitted At'];
     const lines = rows.map(r => [
       r.id,
       `"${(r.name || '').replace(/"/g, '""')}"`,
@@ -262,6 +271,7 @@ app.get('/api/admin/export', requireAdmin, async (req, res) => {
       r.guests,
       r.attending ? 'Yes' : 'No',
       r.event_type === 'meal' ? 'Meal' : 'Wedding',
+      `"${(r.events_attending || '').replace(/"/g, '""')}"`,
       `"${(r.dietary || '').replace(/"/g, '""')}"`,
       `"${(r.menu_choices || '').replace(/"/g, '""')}"`,
       `"${(r.message || '').replace(/"/g, '""')}"`,

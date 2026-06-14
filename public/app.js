@@ -379,6 +379,7 @@
       }
 
       const prevStarter = prevSelections[i]?.starter || 'Chicken Caesar Salad';
+      const prevSoup = prevSelections[i]?.soup || 'Roasted Butternut Soup';
       const prevMain = prevSelections[i]?.main || 'Stuffed Chicken Breast';
       const prevDessert = prevSelections[i]?.dessert || 'Red Velvet Bloom';
       const prevBeverage = prevSelections[i]?.beverage || 'Alcoholic';
@@ -396,6 +397,16 @@
             </select>
           </div>
           <div class="form-group">
+            <label class="form-label" for="guest_${i}_soup">Soup <span class="form-required" aria-label="required">*</span></label>
+            <select class="form-input guest-soup-select" id="guest_${i}_soup" name="guest_${i}_soup" required>
+              <option value="Roasted Butternut Soup" ${prevSoup === 'Roasted Butternut Soup' ? 'selected' : ''}>Roasted Butternut Soup</option>
+              <option value="Skip Soup" ${prevSoup === 'Skip Soup' ? 'selected' : ''}>Skip Soup</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row form-row--2" style="margin-bottom: 0;">
+          <div class="form-group">
             <label class="form-label" for="guest_${i}_main">Main Course <span class="form-required" aria-label="required">*</span></label>
             <select class="form-input guest-main-select" id="guest_${i}_main" name="guest_${i}_main" required>
               <option value="Stuffed Chicken Breast" ${prevMain === 'Stuffed Chicken Breast' ? 'selected' : ''}>Stuffed Chicken Breast</option>
@@ -403,9 +414,6 @@
               <option value="Spaghetti Alfredo" ${prevMain === 'Spaghetti Alfredo' ? 'selected' : ''}>Spaghetti Alfredo (Veg)</option>
             </select>
           </div>
-        </div>
-
-        <div class="form-row form-row--2" style="margin-bottom: 0;">
           <div class="form-group">
             <label class="form-label" for="guest_${i}_dessert">Dessert Selection <span class="form-required" aria-label="required">*</span></label>
             <select class="form-input guest-dessert-select" id="guest_${i}_dessert" name="guest_${i}_dessert" required>
@@ -413,6 +421,9 @@
               <option value="Fresh Fruit Platter" ${prevDessert === 'Fresh Fruit Platter' ? 'selected' : ''}>Fresh Fruit Platter</option>
             </select>
           </div>
+        </div>
+
+        <div class="form-row form-row--2" style="margin-bottom: 0;">
           <div class="form-group">
             <label class="form-label">Beverage Preference <span class="form-required" aria-label="required">*</span></label>
             <div class="menu-beverage-toggle">
@@ -452,10 +463,11 @@
       const nameInput = card.querySelector('.guest-name-input');
       const name = nameInput ? nameInput.value.trim() : '';
       const starter = card.querySelector('.guest-starter-select')?.value || '';
+      const soup = card.querySelector('.guest-soup-select')?.value || '';
       const main = card.querySelector('.guest-main-select')?.value || '';
       const dessert = card.querySelector('.guest-dessert-select')?.value || '';
       const beverage = card.querySelector(`input[name="guest_${i}_beverage"]:checked`)?.value || '';
-      selections[i] = { name, starter, main, dessert, beverage };
+      selections[i] = { name, starter, soup, main, dessert, beverage };
     });
     return selections;
   }
@@ -492,10 +504,11 @@
         }
       }
       const starter = card.querySelector('.guest-starter-select')?.value || 'Chicken Caesar Salad';
+      const soup = card.querySelector('.guest-soup-select')?.value || 'Roasted Butternut Soup';
       const main = card.querySelector('.guest-main-select')?.value || 'Stuffed Chicken Breast';
       const dessert = card.querySelector('.guest-dessert-select')?.value || 'Red Velvet Bloom';
       const beverage = card.querySelector(`input[name="guest_${i}_beverage"]:checked`)?.value || 'Alcoholic';
-      selections.push({ guestNum: i, name, starter, main, dessert, beverage });
+      selections.push({ guestNum: i, name, starter, soup, main, dessert, beverage });
     });
 
     return { valid, selections };
@@ -555,18 +568,22 @@
       const { valid, selections } = window.getMenuSelectionsData();
       if (!valid) return;
       
-      // Format selections as a readable string: "Guest 1 (You): Salad / Main / Dessert [Alcoholic]; Guest 2 (John): Panna Cotta / Seafood / Fruit [Non-Alcoholic]"
+      // Format selections as a readable string: "Guest 1 (You): Salad / Soup / Main / Dessert [Alcoholic]; Guest 2 (John): Panna Cotta / Soup / Seafood / Fruit [Non-Alcoholic]"
       menuChoicesStr = selections.map(s => {
         const label = s.guestNum === 1 ? 'Guest 1 (You)' : `Guest ${s.guestNum} (${s.name})`;
-        return `${label}: ${s.starter} / ${s.main} / ${s.dessert} [${s.beverage}]`;
+        return `${label}: ${s.starter} / ${s.soup} / ${s.main} / ${s.dessert} [${s.beverage}]`;
       }).join('; ');
     }
+
+    const eventsAttending = formData.getAll('events_attending');
+    const eventsStr = eventsAttending.length ? eventsAttending.join(', ') : '';
 
     const data = {
       name:      formData.get('name')?.trim(),
       phone:     formData.get('phone')?.trim() || '',
       guests:    formData.get('guests'),
       attending: formData.get('attending'),
+      eventsAttending: eventsStr,
       dietary:   formData.get('dietary')?.trim() || '',
       message:   formData.get('message')?.trim() || '',
       eventType: formData.get('eventType')?.trim() || 'wedding',

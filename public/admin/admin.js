@@ -70,6 +70,7 @@ const modalBody      = document.getElementById('modal-body');
 // ─── State ────────────────────────────────────────────────────────────────────
 let allRsvps = [];
 let deleteTargetId = null;
+let currentFilter = 'all';
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
 function escapeHtml(str) {
@@ -167,21 +168,39 @@ pwToggle?.addEventListener('click', () => {
 });
 
 // ─── Navigation ───────────────────────────────────────────────────────────────
-function showView(viewId) {
+function showView(viewId, filter = 'all') {
   views.forEach(v => {
     v.hidden = v.id !== `view-${viewId}`;
     v.classList.toggle('active', v.id === `view-${viewId}`);
   });
-  navItems.forEach(btn => btn.classList.toggle('is-active', btn.dataset.view === viewId));
+  
+  navItems.forEach(btn => {
+    if (btn.dataset.view === viewId && (btn.dataset.filter || 'all') === filter) {
+      btn.classList.add('is-active');
+    } else if (btn.dataset.view !== 'rsvps' && btn.dataset.view === viewId) {
+      btn.classList.add('is-active');
+    } else {
+      btn.classList.remove('is-active');
+    }
+  });
 
   const titles = { overview: 'Overview', rsvps: 'All RSVPs' };
+  if (viewId === 'rsvps') {
+    if (filter === 'wedding') titles.rsvps = 'Main Site RSVPs';
+    else if (filter === 'meal') titles.rsvps = 'Menu Site RSVPs';
+  }
+  
   if (topbarTitle) topbarTitle.textContent = titles[viewId] || 'Dashboard';
 
-  if (viewId === 'rsvps') loadRsvps();
+  if (viewId === 'rsvps') {
+    currentFilter = filter;
+    if (allRsvps.length > 0) renderTable(allRsvps);
+    else loadRsvps();
+  }
   closeSidebar();
 }
 
-navItems.forEach(btn => btn.addEventListener('click', () => showView(btn.dataset.view)));
+navItems.forEach(btn => btn.addEventListener('click', () => showView(btn.dataset.view, btn.dataset.filter || 'all')));
 
 // Mobile sidebar
 function openSidebar()  { sidebar?.classList.add('is-open'); burgerBtn?.classList.add('is-open'); burgerBtn?.setAttribute('aria-expanded','true'); }
@@ -266,7 +285,12 @@ async function loadRsvps(search = '') {
 function renderTable(rows) {
   tableLoading.hidden = true;
 
-  if (!rows || rows.length === 0) {
+  let filteredRows = rows || [];
+  if (currentFilter !== 'all') {
+    filteredRows = rows.filter(r => r.event_type === currentFilter);
+  }
+
+  if (filteredRows.length === 0) {
     rsvpTable.hidden  = true;
     tableEmpty.hidden = false;
     if (tableCount) tableCount.textContent = 'No results found.';
@@ -276,7 +300,7 @@ function renderTable(rows) {
   tableEmpty.hidden = true;
   rsvpTable.hidden  = false;
 
-  rsvpTbody.innerHTML = rows.map(r => `
+  rsvpTbody.innerHTML = filteredRows.map(r => `
     <tr data-id="${r.id}">
       <td class="td-name">${escapeHtml(r.name)}</td>
       <td class="td-email">${escapeHtml(r.email)}</td>
@@ -292,6 +316,7 @@ function renderTable(rows) {
           ${r.event_type === 'meal' ? 'Meal' : 'Wedding'}
         </span>
       </td>
+      <td class="td-events-attending" title="${escapeHtml(r.events_attending)}">${escapeHtml(r.events_attending) || '—'}</td>
       <td class="td-dietary">${escapeHtml(r.dietary) || '—'}</td>
       <td class="td-menu-choices" title="${escapeHtml(r.menu_choices)}">${escapeHtml(r.menu_choices) || '—'}</td>
       <td class="td-message" title="${escapeHtml(r.message)}">${escapeHtml(r.message) || '—'}</td>
@@ -307,7 +332,7 @@ function renderTable(rows) {
     </tr>
   `).join('');
 
-  if (tableCount) tableCount.textContent = `Showing ${rows.length} RSVP${rows.length !== 1 ? 's' : ''}`;
+  if (tableCount) tableCount.textContent = `Showing ${filteredRows.length} RSVP${filteredRows.length !== 1 ? 's' : ''}`;
 
   rsvpTbody.querySelectorAll('.delete-btn').forEach(btn => {
     btn.addEventListener('click', () => {
