@@ -50,8 +50,8 @@ const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10,
   message: { error: 'Too many login attempts. Please try again later.' } });
 
 // ─── Static Files ──────────────────────────────────────────────────────────────
+// public/ contains both the wedding site and public/admin/ for the admin panel
 app.use(express.static(path.join(__dirname, '../public')));
-app.use('/admin', express.static(path.join(__dirname, '../admin')));
 
 // ─── Email Transporter ─────────────────────────────────────────────────────────
 let transporter = null;
@@ -254,8 +254,8 @@ app.get('/api/admin/export', requireAdmin, async (req, res) => {
 
 // ─── Page Routes ───────────────────────────────────────────────────────────────
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../public/index.html')));
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, '../admin/index.html')));
-app.get('/admin/*', (req, res) => res.sendFile(path.join(__dirname, '../admin/index.html')));
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, '../public/admin/index.html')));
+app.get('/admin/*', (req, res) => res.sendFile(path.join(__dirname, '../public/admin/index.html')));
 
 // ─── Start ─────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
