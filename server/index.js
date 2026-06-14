@@ -258,10 +258,13 @@ app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, '../public/adm
 app.get('/admin/*', (req, res) => res.sendFile(path.join(__dirname, '../public/admin/index.html')));
 
 // ─── Start ─────────────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n💙 Oshanie & Ninura Wedding RSVP`);
-  console.log(`   RSVP page:   http://localhost:${PORT}`);
-  console.log(`   Admin panel: http://localhost:${PORT}/admin\n`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`\n💙 Oshanie & Ninura Wedding RSVP`);
+    console.log(`   RSVP page:   http://localhost:${PORT}`);
+    console.log(`   Admin panel: http://localhost:${PORT}/admin\n`);
+  });
+}
 
 module.exports = app;
+
