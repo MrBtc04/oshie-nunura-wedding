@@ -22,7 +22,7 @@ async function initDb() {
       CREATE TABLE IF NOT EXISTS rsvps (
         id          SERIAL PRIMARY KEY,
         name        TEXT    NOT NULL,
-        email       TEXT    NOT NULL,
+        email       TEXT,
         phone       TEXT,
         guests      INTEGER NOT NULL DEFAULT 1,
         attending   INTEGER NOT NULL DEFAULT 1,
@@ -31,6 +31,8 @@ async function initDb() {
         created_at  TIMESTAMPTZ DEFAULT NOW()
       )
     `;
+    // Ensure email is optional in case table was created with NOT NULL previously
+    await sql`ALTER TABLE rsvps ALTER COLUMN email DROP NOT NULL`;
     console.log('💾 Database: Neon Postgres connected & ready');
   } catch (err) {
     console.error('Failed to initialize database:', err.message);
@@ -65,7 +67,7 @@ if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
 }
 
 async function sendConfirmationEmail(rsvp) {
-  if (!transporter) return;
+  if (!transporter || !rsvp.email) return;
   const attendingText = rsvp.attending ? 'attending' : 'not able to attend';
   try {
     await transporter.sendMail({
@@ -119,8 +121,6 @@ app.post('/api/rsvp', rsvpLimiter, async (req, res) => {
   const { name, email, phone, guests, attending, dietary, message } = req.body;
 
   if (!name || !name.trim()) return res.status(400).json({ error: 'Full name is required.' });
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-    return res.status(400).json({ error: 'A valid email address is required.' });
 
   const guestsNum = parseInt(guests) || 1;
   if (guestsNum < 1 || guestsNum > 5)
@@ -129,15 +129,17 @@ app.post('/api/rsvp', rsvpLimiter, async (req, res) => {
   const attendingBool = attending === 'true' || attending === true || attending === 1;
 
   try {
-    const existing = await sql`SELECT id FROM rsvps WHERE email = ${email.trim().toLowerCase()}`;
+    const existing = await sql`SELECT id FROM rsvps WHERE LOWER(name) = ${name.trim().toLowerCase()}`;
     if (existing.length > 0)
-      return res.status(409).json({ error: 'An RSVP with this email already exists. Please contact us if you need to make changes.' });
+      return res.status(409).json({ error: 'An RSVP with this name already exists. Please contact us if you need to make changes.' });
+
+    const emailValue = email && email.trim() ? email.trim().toLowerCase() : null;
 
     const result = await sql`
       INSERT INTO rsvps (name, email, phone, guests, attending, dietary, message)
       VALUES (
         ${name.trim()},
-        ${email.trim().toLowerCase()},
+        ${emailValue},
         ${phone ? phone.trim() : null},
         ${guestsNum},
         ${attendingBool ? 1 : 0},
@@ -147,7 +149,7 @@ app.post('/api/rsvp', rsvpLimiter, async (req, res) => {
       RETURNING id
     `;
 
-    sendConfirmationEmail({ name: name.trim(), email: email.trim(), attending: attendingBool });
+    sendConfirmationEmail({ name: name.trim(), email: emailValue, attending: attendingBool });
 
     res.status(201).json({
       success: true,

@@ -368,16 +368,9 @@
     let valid = true;
 
     clearFieldError('name');
-    clearFieldError('email');
 
     if (!data.name || data.name.trim().length < 2) {
       showFieldError('name', 'Please enter your full name.');
-      valid = false;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!data.email || !emailRegex.test(data.email)) {
-      showFieldError('email', 'Please enter a valid email address.');
       valid = false;
     }
 
@@ -388,10 +381,6 @@
   document.getElementById('name')?.addEventListener('blur', function () {
     if (this.value.trim().length >= 2) clearFieldError('name');
   });
-  document.getElementById('email')?.addEventListener('blur', function () {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (emailRegex.test(this.value)) clearFieldError('email');
-  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -400,7 +389,6 @@
     const formData = new FormData(form);
     const data = {
       name:      formData.get('name')?.trim(),
-      email:     formData.get('email')?.trim(),
       phone:     formData.get('phone')?.trim() || '',
       guests:    formData.get('guests'),
       attending: formData.get('attending'),
