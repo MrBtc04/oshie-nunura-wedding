@@ -549,6 +549,11 @@
       valid = false;
     }
 
+    if (!data.attending) {
+      globalError.textContent = 'Please let us know if you will be attending.';
+      valid = false;
+    }
+
     return valid;
   }
 

@@ -496,7 +496,7 @@
         <div class="form-group">
           <label class="form-label">Will you be attending? <span class="form-required" aria-label="required">*</span></label>
           <div class="attend-toggle" role="group" aria-label="Attendance confirmation">
-            <input type="radio" name="attending" id="attend-yes" value="true" checked class="sr-only" />
+            <input type="radio" name="attending" id="attend-yes" value="true" class="sr-only" />
             <label for="attend-yes" class="attend-btn attend-btn--yes">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
               Joyfully Accept
@@ -548,10 +548,10 @@
             const conditionalFields = document.getElementById('conditional-rsvp-fields');
             
             function toggleFields() {
-              if (attendNo.checked) {
-                conditionalFields.style.display = 'none';
-              } else {
+              if (attendYes.checked) {
                 conditionalFields.style.display = 'block';
+              } else {
+                conditionalFields.style.display = 'none';
               }
             }
 
