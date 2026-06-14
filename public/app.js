@@ -378,49 +378,53 @@
         `;
       }
 
-      const prevPlate = prevSelections[i]?.plate || 'Grilled Salmon';
+      const prevStarter = prevSelections[i]?.starter || 'Chicken Caesar Salad';
+      const prevMain = prevSelections[i]?.main || 'Stuffed Chicken Breast';
+      const prevDessert = prevSelections[i]?.dessert || 'Red Velvet Bloom';
       const prevBeverage = prevSelections[i]?.beverage || 'Alcoholic';
 
       card.innerHTML = `
         <div class="guest-selection-header">${headerText}</div>
         ${nameFieldHtml}
-        <div class="form-group">
-          <label class="form-label">Select Plate Choice <span class="form-required" aria-label="required">*</span></label>
-          <div class="menu-choices-grid">
-            <label class="menu-choice-option">
-              <input type="radio" name="guest_${i}_plate" value="Grilled Salmon" ${prevPlate === 'Grilled Salmon' ? 'checked' : ''} />
-              <span class="menu-choice-box">
-                <strong>Grilled Salmon</strong>
-                <span class="menu-choice-desc">Lemon butter, wild rice & asparagus</span>
-              </span>
-            </label>
-            <label class="menu-choice-option">
-              <input type="radio" name="guest_${i}_plate" value="Slow-Roasted Beef" ${prevPlate === 'Slow-Roasted Beef' ? 'checked' : ''} />
-              <span class="menu-choice-box">
-                <strong>Slow-Roasted Beef</strong>
-                <span class="menu-choice-desc">Truffle mash, roast veg & red wine reduction</span>
-              </span>
-            </label>
-            <label class="menu-choice-option">
-              <input type="radio" name="guest_${i}_plate" value="Vegetarian Cannelloni" ${prevPlate === 'Vegetarian Cannelloni' ? 'checked' : ''} />
-              <span class="menu-choice-box">
-                <strong>Vegetarian</strong>
-                <span class="menu-choice-desc">Spinach & Ricotta Cannelloni, tomato sauce</span>
-              </span>
-            </label>
+        
+        <div class="form-row form-row--2" style="margin-bottom: 0;">
+          <div class="form-group">
+            <label class="form-label" for="guest_${i}_starter">Starter Selection <span class="form-required" aria-label="required">*</span></label>
+            <select class="form-input guest-starter-select" id="guest_${i}_starter" name="guest_${i}_starter" required>
+              <option value="Chicken Caesar Salad" ${prevStarter === 'Chicken Caesar Salad' ? 'selected' : ''}>Chicken Caesar Salad</option>
+              <option value="Pumpkin Panna Cotta" ${prevStarter === 'Pumpkin Panna Cotta' ? 'selected' : ''}>Pumpkin Panna Cotta</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="guest_${i}_main">Main Course <span class="form-required" aria-label="required">*</span></label>
+            <select class="form-input guest-main-select" id="guest_${i}_main" name="guest_${i}_main" required>
+              <option value="Stuffed Chicken Breast" ${prevMain === 'Stuffed Chicken Breast' ? 'selected' : ''}>Stuffed Chicken Breast</option>
+              <option value="Trio of Seafood" ${prevMain === 'Trio of Seafood' ? 'selected' : ''}>Trio of Seafood</option>
+              <option value="Spaghetti Alfredo" ${prevMain === 'Spaghetti Alfredo' ? 'selected' : ''}>Spaghetti Alfredo (Veg)</option>
+            </select>
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">Beverage Preference <span class="form-required" aria-label="required">*</span></label>
-          <div class="menu-beverage-toggle">
-            <label class="beverage-option">
-              <input type="radio" name="guest_${i}_beverage" value="Alcoholic" ${prevBeverage === 'Alcoholic' ? 'checked' : ''} />
-              <span>Alcoholic</span>
-            </label>
-            <label class="beverage-option">
-              <input type="radio" name="guest_${i}_beverage" value="Non-Alcoholic" ${prevBeverage === 'Non-Alcoholic' ? 'checked' : ''} />
-              <span>Non-Alcoholic</span>
-            </label>
+
+        <div class="form-row form-row--2" style="margin-bottom: 0;">
+          <div class="form-group">
+            <label class="form-label" for="guest_${i}_dessert">Dessert Selection <span class="form-required" aria-label="required">*</span></label>
+            <select class="form-input guest-dessert-select" id="guest_${i}_dessert" name="guest_${i}_dessert" required>
+              <option value="Red Velvet Bloom" ${prevDessert === 'Red Velvet Bloom' ? 'selected' : ''}>Red Velvet Bloom</option>
+              <option value="Fresh Fruit Platter" ${prevDessert === 'Fresh Fruit Platter' ? 'selected' : ''}>Fresh Fruit Platter</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Beverage Preference <span class="form-required" aria-label="required">*</span></label>
+            <div class="menu-beverage-toggle">
+              <label class="beverage-option">
+                <input type="radio" name="guest_${i}_beverage" value="Alcoholic" ${prevBeverage === 'Alcoholic' ? 'checked' : ''} />
+                <span>Alcoholic</span>
+              </label>
+              <label class="beverage-option">
+                <input type="radio" name="guest_${i}_beverage" value="Non-Alcoholic" ${prevBeverage === 'Non-Alcoholic' ? 'checked' : ''} />
+                <span>Non-Alcoholic</span>
+              </label>
+            </div>
           </div>
         </div>
       `;
@@ -447,9 +451,11 @@
       const i = index + 1;
       const nameInput = card.querySelector('.guest-name-input');
       const name = nameInput ? nameInput.value.trim() : '';
-      const plate = card.querySelector(`input[name="guest_${i}_plate"]:checked`)?.value || '';
+      const starter = card.querySelector('.guest-starter-select')?.value || '';
+      const main = card.querySelector('.guest-main-select')?.value || '';
+      const dessert = card.querySelector('.guest-dessert-select')?.value || '';
       const beverage = card.querySelector(`input[name="guest_${i}_beverage"]:checked`)?.value || '';
-      selections[i] = { name, plate, beverage };
+      selections[i] = { name, starter, main, dessert, beverage };
     });
     return selections;
   }
@@ -485,9 +491,11 @@
           if (errorEl) errorEl.textContent = '';
         }
       }
-      const plate = card.querySelector(`input[name="guest_${i}_plate"]:checked`)?.value || 'Grilled Salmon';
+      const starter = card.querySelector('.guest-starter-select')?.value || 'Chicken Caesar Salad';
+      const main = card.querySelector('.guest-main-select')?.value || 'Stuffed Chicken Breast';
+      const dessert = card.querySelector('.guest-dessert-select')?.value || 'Red Velvet Bloom';
       const beverage = card.querySelector(`input[name="guest_${i}_beverage"]:checked`)?.value || 'Alcoholic';
-      selections.push({ guestNum: i, name, plate, beverage });
+      selections.push({ guestNum: i, name, starter, main, dessert, beverage });
     });
 
     return { valid, selections };
@@ -547,10 +555,10 @@
       const { valid, selections } = window.getMenuSelectionsData();
       if (!valid) return;
       
-      // Format selections as a readable string: "Guest 1 (You): Salmon [Alcoholic]; Guest 2 (John): Beef [Non-Alcoholic]"
+      // Format selections as a readable string: "Guest 1 (You): Salad / Main / Dessert [Alcoholic]; Guest 2 (John): Panna Cotta / Seafood / Fruit [Non-Alcoholic]"
       menuChoicesStr = selections.map(s => {
         const label = s.guestNum === 1 ? 'Guest 1 (You)' : `Guest ${s.guestNum} (${s.name})`;
-        return `${label}: ${s.plate} [${s.beverage}]`;
+        return `${label}: ${s.starter} / ${s.main} / ${s.dessert} [${s.beverage}]`;
       }).join('; ');
     }
 

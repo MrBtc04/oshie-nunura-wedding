@@ -1055,6 +1055,11 @@ input, textarea, button, select { font-family: inherit; font-size: inherit; }
   color: #000 !important;
 }
 
+.rsvp-section select.form-input option {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
 /* ─── 8. Footer ─────────────────────────────────────────────────────────────── */
 .footer {
   background: var(--midnight-blue);
