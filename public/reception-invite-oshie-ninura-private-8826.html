@@ -492,36 +492,6 @@
           </div>
         </div>
 
-        <div class="form-row form-row--2">
-          <div class="form-group">
-            <label class="form-label" for="guests">Number of Guests</label>
-            <div class="guests-selector" role="group" aria-label="Select number of guests">
-              <button type="button" class="guests-btn guests-btn--dec" id="guests-dec" aria-label="Decrease guests">−</button>
-              <input class="guests-display" type="number" id="guests" name="guests" value="1" min="1" max="5" readonly aria-live="polite" />
-              <button type="button" class="guests-btn guests-btn--inc" id="guests-inc" aria-label="Increase guests">+</button>
-            </div>
-            <span class="form-hint">Including yourself (max 5)</span>
-          </div>
-        </div>
-
-        <!-- Dynamic Guest Menu Selections Container -->
-        <div id="guest-menu-selections" class="guest-menu-selections-container"></div>
-
-        <!-- Events Attending Toggle -->
-        <div class="form-group">
-          <label class="form-label">Which events will you be attending? <span class="form-optional">(if accepting)</span></label>
-          <div class="menu-beverage-toggle" style="margin-top: 8px;">
-            <label class="beverage-option" style="flex:1;">
-              <input type="checkbox" name="events_attending" value="Church Ceremony" checked />
-              <span>Church Ceremony</span>
-            </label>
-            <label class="beverage-option" style="flex:1;">
-              <input type="checkbox" name="events_attending" value="Wedding Reception" checked />
-              <span>Wedding Reception</span>
-            </label>
-          </div>
-        </div>
-
         <!-- Attendance Toggle -->
         <div class="form-group">
           <label class="form-label">Will you be attending? <span class="form-required" aria-label="required">*</span></label>
@@ -539,7 +509,57 @@
           </div>
         </div>
 
+        <div id="conditional-rsvp-fields">
+          <div class="form-row form-row--2">
+            <div class="form-group">
+              <label class="form-label" for="guests">Number of Guests</label>
+              <div class="guests-selector" role="group" aria-label="Select number of guests">
+                <button type="button" class="guests-btn guests-btn--dec" id="guests-dec" aria-label="Decrease guests">−</button>
+                <input class="guests-display" type="number" id="guests" name="guests" value="1" min="1" max="5" readonly aria-live="polite" />
+                <button type="button" class="guests-btn guests-btn--inc" id="guests-inc" aria-label="Increase guests">+</button>
+              </div>
+              <span class="form-hint">Including yourself (max 5)</span>
+            </div>
+          </div>
 
+          <!-- Dynamic Guest Menu Selections Container -->
+          <div id="guest-menu-selections" class="guest-menu-selections-container"></div>
+
+          <!-- Events Attending Toggle -->
+          <div class="form-group">
+            <label class="form-label">Which events will you be attending? <span class="form-optional">(if accepting)</span></label>
+            <div class="menu-beverage-toggle" style="margin-top: 8px;">
+              <label class="beverage-option" style="flex:1;">
+                <input type="checkbox" name="events_attending" value="Church Ceremony" checked />
+                <span>Church Ceremony</span>
+              </label>
+              <label class="beverage-option" style="flex:1;">
+                <input type="checkbox" name="events_attending" value="Wedding Reception" checked />
+                <span>Wedding Reception</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', () => {
+            const attendYes = document.getElementById('attend-yes');
+            const attendNo = document.getElementById('attend-no');
+            const conditionalFields = document.getElementById('conditional-rsvp-fields');
+            
+            function toggleFields() {
+              if (attendNo.checked) {
+                conditionalFields.style.display = 'none';
+              } else {
+                conditionalFields.style.display = 'block';
+              }
+            }
+
+            attendYes.addEventListener('change', toggleFields);
+            attendNo.addEventListener('change', toggleFields);
+            toggleFields();
+          });
+        </script>
         <div class="form-group">
           <label class="form-label" for="message">Message to the Couple <span class="form-optional">(optional)</span></label>
           <textarea class="form-textarea" id="message" name="message" placeholder="Share your warm wishes for Oshanie & Ninura..." rows="4"></textarea>
