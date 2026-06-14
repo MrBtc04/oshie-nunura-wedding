@@ -390,23 +390,11 @@
           </div>
         </div>
 
-        <div class="form-row form-row--2">
-          <div class="form-group">
-            <label class="form-label" for="guests">Number of Guests</label>
-            <div class="guests-selector" role="group" aria-label="Select number of guests">
-              <button type="button" class="guests-btn guests-btn--dec" id="guests-dec" aria-label="Decrease guests">−</button>
-              <input class="guests-display" type="number" id="guests" name="guests" value="1" min="1" max="5" readonly aria-live="polite" />
-              <button type="button" class="guests-btn guests-btn--inc" id="guests-inc" aria-label="Increase guests">+</button>
-            </div>
-            <span class="form-hint">Including yourself (max 5)</span>
-          </div>
-        </div>
-
         <!-- Attendance Toggle -->
         <div class="form-group">
           <label class="form-label">Will you be attending? <span class="form-required" aria-label="required">*</span></label>
           <div class="attend-toggle" role="group" aria-label="Attendance confirmation">
-            <input type="radio" name="attending" id="attend-yes" value="true" checked class="sr-only" />
+            <input type="radio" name="attending" id="attend-yes" value="true" class="sr-only" />
             <label for="attend-yes" class="attend-btn attend-btn--yes">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
               Joyfully Accept
@@ -416,6 +404,20 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               Regretfully Decline
             </label>
+          </div>
+        </div>
+
+        <div id="conditional-rsvp-fields" style="display: none;">
+          <div class="form-row form-row--2">
+            <div class="form-group">
+              <label class="form-label" for="guests">Number of Guests</label>
+              <div class="guests-selector" role="group" aria-label="Select number of guests">
+                <button type="button" class="guests-btn guests-btn--dec" id="guests-dec" aria-label="Decrease guests">−</button>
+                <input class="guests-display" type="number" id="guests" name="guests" value="1" min="1" max="5" readonly aria-live="polite" />
+                <button type="button" class="guests-btn guests-btn--inc" id="guests-inc" aria-label="Increase guests">+</button>
+              </div>
+              <span class="form-hint">Including yourself (max 5)</span>
+            </div>
           </div>
         </div>
 
@@ -431,6 +433,26 @@
           <span class="submit-btn__text">Send My RSVP</span>
           <span class="submit-btn__spinner" aria-hidden="true"></span>
         </button>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', () => {
+            const attendYes = document.getElementById('attend-yes');
+            const attendNo = document.getElementById('attend-no');
+            const conditionalFields = document.getElementById('conditional-rsvp-fields');
+            
+            function toggleFields() {
+              if (attendYes.checked) {
+                conditionalFields.style.display = 'block';
+              } else {
+                conditionalFields.style.display = 'none';
+              }
+            }
+
+            attendYes.addEventListener('change', toggleFields);
+            attendNo.addEventListener('change', toggleFields);
+            toggleFields();
+          });
+        </script>
       </form>
     </div>
 
