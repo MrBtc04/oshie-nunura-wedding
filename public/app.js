@@ -177,11 +177,12 @@
     track.style.animationPlayState = 'paused'; // Pause the marquee
     current = ((index % allItems.length) + allItems.length) % allItems.length;
     const img = allItems[current].querySelector('img');
-    const newImg = lbImg.cloneNode(false);
+    const currentLbImg = document.getElementById('lightbox-img');
+    const newImg = currentLbImg.cloneNode(false);
     newImg.src = img.src;
     newImg.alt = img.alt;
     newImg.id  = 'lightbox-img';
-    lbImg.replaceWith(newImg);
+    currentLbImg.replaceWith(newImg);
     lbCaption.textContent = ''; 
     lightbox.hidden = false;
     document.body.style.overflow = 'hidden';
